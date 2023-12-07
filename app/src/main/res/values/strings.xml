@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TaskWiz</string>
+    <string name="create_task_lable">What do you need to get done today?</string>
+    <string name="task_name_hint">Task name...</string>
+    <string name="task_textview_label">Tasks</string>
+    <string name="task_description_hint">Task description...</string>
+    <string name="complete_by_hint">Complete by...</string>
+    <string name="add_a_task_btn_label">Add a task</string>
+    <string name="create_task_btn_label">Create task</string>
+</resources>

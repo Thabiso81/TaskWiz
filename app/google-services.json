@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "445282152371",
+    "firebase_url": "https://taskwiz-6fa9d-default-rtdb.firebaseio.com",
+    "project_id": "taskwiz-6fa9d",
+    "storage_bucket": "taskwiz-6fa9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445282152371:android:e56314168b70e19536e5c6",
+        "android_client_info": {
+          "package_name": "com.thabiso81.taskwiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXj5Bi0z-FAN_35pcKoBMj7yfdrPQSEfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445282152371:android:f69074d4d08e904736e5c6",
+        "android_client_info": {
+          "package_name": "za.edu.varcitycollege.st10091894.dayplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445282152371-maufcv23kf152vukojprhag247m7og17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "za.edu.varcitycollege.st10091894.dayplanner",
+            "certificate_hash": "441db04882777e2e548f597be8acd12245f13a06"
+          }
+        },
+        {
+          "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXj5Bi0z-FAN_35pcKoBMj7yfdrPQSEfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445282152371:android:07648e587122964536e5c6",
+        "android_client_info": {
+          "package_name": "za.edu.varcitycollege.st10091894.timetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXj5Bi0z-FAN_35pcKoBMj7yfdrPQSEfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "445282152371-js3m4um10gjfa47c1b4ipoi927f7g3bj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
