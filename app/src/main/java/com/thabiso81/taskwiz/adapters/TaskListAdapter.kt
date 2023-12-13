@@ -2,35 +2,43 @@ package com.thabiso81.taskwiz.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.thabiso81.taskwiz.databinding.RecyclerViewRowBinding
+import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
 
-class TaskListAdapter(val taskList: List<TaskModel>):
-    RecyclerView.Adapter<TaskListAdapter.ViewHolder>() {
+class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
 
-    inner class ViewHolder(val itemBinding: RecyclerViewRowBinding): RecyclerView.ViewHolder(itemBinding.root){
-        fun bindItem(taskModel: TaskModel){
-            itemBinding.tvTaskName.text = taskModel.taskName
-            itemBinding.tvTaskDescription.text = taskModel.taskDescription
-            itemBinding.tvTaskDueDate.text = "Due on ${taskModel.taskDueDate.dayOfMonth} ${(taskModel.taskDueDate.month.toString()).replaceFirstChar { 
-                it.uppercase()
-            }}"
+    inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
+    private val diffUtil = object : DiffUtil.ItemCallback<TaskModel>(){
+        override fun areItemsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem.taskId == newItem.taskId
         }
+
+        override fun areContentsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem == newItem
+        }
+
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(RecyclerViewRowBinding.inflate(LayoutInflater.from(parent.context),parent, false))
+    val differ = AsyncListDiffer(this, diffUtil)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskListAdapterViewHolder {
+        return TaskListAdapterViewHolder(TaskViewHolderBinding.inflate(LayoutInflater.from(parent.context),parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val task = taskList[position]
-        holder.bindItem(task)
+    override fun onBindViewHolder(holder: TaskListAdapterViewHolder, position: Int) {
+        val task = differ.currentList[position]
+        holder.itemBinding.tvTaskName.text = task.taskName
+        holder.itemBinding.tvTaskDescription.text = task.taskDescription
+        holder.itemBinding.tvTaskDueDate.text = "${task.taskDueDate!!.dayOfMonth} ${task.taskDueDate!!.month.toString()}"
+
     }
 
     override fun getItemCount(): Int {
-        return taskList.size
+        return differ.currentList.size
     }
 
 }

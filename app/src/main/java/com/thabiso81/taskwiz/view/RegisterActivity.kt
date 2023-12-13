@@ -27,6 +27,16 @@ class RegisterActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         //register the user
+        btnRegisterSetOnclickListener()
+
+        //take user back to Login
+        tvSignInSetOnlickListener()
+
+
+
+    }
+
+    private fun btnRegisterSetOnclickListener() {
         binding.btnRegister.setOnClickListener(){
             if (inputValid(binding.edtPersonEmail, binding.edtPassword, binding.edtConfirmPassword)){
 
@@ -68,16 +78,15 @@ class RegisterActivity : AppCompatActivity() {
 
             }
         }
+    }
 
-        //take user back to Login
+    private fun tvSignInSetOnlickListener() {
         binding.tvSignIn.setOnClickListener(){
             val backToLogin = Intent(this, LoginActivity::class.java)
 
             startActivity(backToLogin)
             finish()
         }
-
-
     }
 
     private fun inputValid(email: EditText, password: EditText, confirmPassword: EditText): Boolean{

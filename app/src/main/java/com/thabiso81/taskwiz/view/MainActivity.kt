@@ -7,12 +7,11 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskListAdapter
+import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.ActivityMainBinding
-import com.thabiso81.taskwiz.lists.TaskList
-import com.thabiso81.taskwiz.model.TaskModel
-import com.thabiso81.taskwiz.viewModel.MyTasksViewModel
+import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
+import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,43 +20,47 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var tasksMvvm: MyTasksViewModel
+    private lateinit var tasksMvvm: ViewTasksViewModel
+    private lateinit var taskListAdapter: TaskListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        tasksMvvm = ViewModelProvider(this).get(MyTasksViewModel::class.java)
+        instantiateDatabaseAndViewModel()
 
         //get the list of tasks
         tasksMvvm.getTasks()
         observerTasks()
 
-        //bind recyclerView
-        val adapter = TaskListAdapter(TaskList.taskList)
-        binding.rvTasks.adapter = adapter
+        prepareReyclerView()
 
-        //explicit intent that takes the user to a layout that lets them add a task
-        binding.bvAddTask.setOnClickListener() {
-            val nextPage = Intent(this@MainActivity, CreateTaskActivity::class.java)
-            startActivity(nextPage)
+        addTaskSetOnClickListener()
+
+        onBackButtonPressed()
+
+
+    }
+
+    private fun prepareReyclerView() {
+        taskListAdapter = TaskListAdapter()
+        binding.rvTasks.apply {
+            adapter = taskListAdapter
         }
+    }
 
 
-        //implicit intent that lets the user share their tasks (collected from the recyclerView)
-        /**       val shareTasks = findViewById<Button>(R.id.bvShareTasks)
-        shareTasks.setOnClickListener() {
+    private fun observerTasks() {
+        tasksMvvm.observemyTasksLiveData().observe(this@MainActivity, Observer { tasks ->
 
-        val message: String = "These are my tasks!"
-        val intent = Intent()
-        intent.action = Intent.ACTION_SEND
-        intent.putExtra(Intent.EXTRA_TEXT, message)
-        intent.type = "text/plain"
+            taskListAdapter.differ.submitList(tasks)
 
-        startActivity(Intent.createChooser(intent,"Share to:"))
-        } **/
 
+        })
+    }
+
+    private fun onBackButtonPressed(){
         //handle back button being pressed
         var backButtonPressed = 0
         val dispatcher = this.onBackPressedDispatcher
@@ -81,20 +84,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
     }
 
-    private fun observerTasks() {
-        tasksMvvm.observemyTasksLiveData().observe(this@MainActivity, object: Observer<TaskModel> {
-
-            override fun onChanged(value: TaskModel) {
-                //implement changes that need to be triggered when observer is triggered
-            }
-        })
+    private fun instantiateDatabaseAndViewModel(){
+        val taskDatabase = TaskDatabase.getInstance(this)
+        val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
+        tasksMvvm = ViewModelProvider(this, viewModelFactory)[ViewTasksViewModel::class.java]
     }
-    /*override fun onDestroy(){
-        super.onDestroy()
-        binding = null
-    }*/
 
+    private fun addTaskSetOnClickListener(){
+        binding.bvAddTask.setOnClickListener() {
+            val nextPage = Intent(this@MainActivity, CreateTaskActivity::class.java)
+            startActivity(nextPage)
+        }
+    }
 }
