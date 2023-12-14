@@ -173,6 +173,7 @@
                 android:background="@drawable/view_background_login_button"
                 android:fontFamily="sans-serif"
                 android:text="Login"
+                android:textColor="@color/white"
                 android:textSize="20dp"
                 app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="parent"

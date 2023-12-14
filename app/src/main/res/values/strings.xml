@@ -6,5 +6,5 @@
     <string name="task_description_hint">Task description...</string>
     <string name="complete_by_hint">Complete by...</string>
     <string name="add_a_task_btn_label">Add a task</string>
-    <string name="create_task_btn_label">Create task</string>
+    <string name="create_task_btn_label">Done</string>
 </resources>
