@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TaskWiz</string>
     <string name="create_task_lable">What do you need to get done today?</string>
-    <string name="task_name_hint">Task name...</string>
+    <string name="task_name_hint">Title...</string>
     <string name="task_textview_label">to do</string>
     <string name="task_description_hint">Task description...</string>
     <string name="complete_by_hint">Complete by...</string>

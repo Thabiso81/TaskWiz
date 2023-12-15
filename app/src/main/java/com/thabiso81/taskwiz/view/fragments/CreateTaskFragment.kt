@@ -1,5 +1,6 @@
 package com.thabiso81.taskwiz.view.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -15,8 +17,13 @@ import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
 import com.thabiso81.taskwiz.model.TaskModel
+import com.thabiso81.taskwiz.view.activities.LoginActivity
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
@@ -49,6 +56,7 @@ class CreateTaskFragment : Fragment() {
 
         btnCreateTaskSetOnClickListener()
 
+        onBackButtonPressed()
 
         return view
     }
@@ -127,4 +135,14 @@ class CreateTaskFragment : Fragment() {
         return isValid
     }
 
+    private fun onBackButtonPressed(){
+        //handle back button being pressed
+        val dispatcher = requireActivity().onBackPressedDispatcher
+        dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // handle back press in fragments.
+               findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+            }
+        })
+    }
 }
