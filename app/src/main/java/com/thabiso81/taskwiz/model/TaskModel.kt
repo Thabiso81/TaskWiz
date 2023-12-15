@@ -9,7 +9,7 @@ data class TaskModel(
     @PrimaryKey(autoGenerate = true)
     val taskId: Int = 0,
     val taskName : String?,
-    val completionStatus: String?,
+    var completionStatus: String?,
     val taskDescription: String?,
     val taskDueDate: LocalDate?,
     val taskCreationDate: LocalDate?

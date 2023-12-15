@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.thabiso81.taskwiz.model.TaskModel
 
-@Database(entities = [TaskModel::class], version = 4)
+@Database(entities = [TaskModel::class], version = 5) //version 5 is already used up
 @TypeConverters(TaskTypeConverter::class)
 abstract class TaskDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDao

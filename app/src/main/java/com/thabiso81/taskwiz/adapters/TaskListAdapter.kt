@@ -3,13 +3,17 @@ package com.thabiso81.taskwiz.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.checkbox.MaterialCheckBox.OnCheckedStateChangedListener
+import com.google.android.material.snackbar.Snackbar
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
@@ -17,8 +21,10 @@ import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import java.time.LocalDate
 
-class TaskListAdapter() : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
-    private lateinit var viewModel: ViewTasksViewModel
+class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener) : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
+    interface OnCheckboxClickListener {
+        fun onCheckboxClick(task: TaskModel)
+    }
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
     private val diffUtil = object : DiffUtil.ItemCallback<TaskModel>(){
@@ -71,9 +77,13 @@ class TaskListAdapter() : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterVi
         }
 
         //handle the click listener of the checkbox
+        holder.itemBinding.cbxCompleted.isChecked = false
         holder.itemBinding.cbxCompleted.setOnCheckedChangeListener{ _, isChecked ->
-            if (isChecked){
+            if (position != RecyclerView.NO_POSITION){
 
+                if (isChecked){
+                    onCheckboxClickListener.onCheckboxClick(task)
+                }
             }
         }
 
@@ -82,20 +92,5 @@ class TaskListAdapter() : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterVi
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
-    private fun instantiateDatabaseAndViewModel(v: View){
-        val taskDatabase = TaskDatabase.getInstance(v.context)
-        val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
-        viewModel = ViewModelProvider(v.context as Fragment, viewModelFactory)[ViewTasksViewModel::class.java]
-    }
-
-//    private fun observerTasks(v: View) {
-//        viewModel.observeIncompleteTasksLiveData().observe(v.context as Fragment , Observer { tasks ->
-//
-//            differ.submitList(tasks)
-//
-//
-//        })
-//    }
 
 }

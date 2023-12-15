@@ -18,6 +18,7 @@ import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
+import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.view.activities.LoginActivity
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
@@ -27,7 +28,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class ViewCurrentTasksFragment : Fragment() {
+class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener {
     private var _binding: FragmentViewCurrentTasksBinding? = null
     private val binding get() = _binding!!
 
@@ -72,7 +73,7 @@ class ViewCurrentTasksFragment : Fragment() {
     }
 
     private fun prepareReyclerView() {
-        taskListAdapter = TaskListAdapter()
+        taskListAdapter = TaskListAdapter(this)
         binding.rvTasks.apply {
             adapter = taskListAdapter
         }
@@ -119,6 +120,20 @@ class ViewCurrentTasksFragment : Fragment() {
         //attach the itemTouchHelper to our recyclerview
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvTasks)
     }
+
+    override fun onCheckboxClick(task: TaskModel) {
+        task.completionStatus = "Complete"
+        viewModel.insertTask(task)
+
+        Snackbar.make(binding.rvTasks, "Task completed", Snackbar.LENGTH_LONG).setAction(
+            "undo",
+            View.OnClickListener {
+                task.completionStatus = "Incomplete"
+                viewModel.insertTask(task)
+            }
+        ).show()
+    }
+
     private fun onBackButtonPressed(){
         //handle back button being pressed
         var backButtonPressed = 0
@@ -152,4 +167,6 @@ class ViewCurrentTasksFragment : Fragment() {
             findNavController().navigate(R.id.action_viewCurrentTasksFragment_to_createTaskFragment)
         }
     }
+
+
 }
