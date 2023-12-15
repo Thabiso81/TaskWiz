@@ -11,6 +11,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
@@ -28,7 +31,7 @@ class ViewCurrentTasksFragment : Fragment() {
     private var _binding: FragmentViewCurrentTasksBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var tasksMvvm: ViewTasksViewModel
+    private lateinit var viewModel: ViewTasksViewModel
     private lateinit var taskListAdapter: TaskListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +49,26 @@ class ViewCurrentTasksFragment : Fragment() {
         instantiateDatabaseAndViewModel()
 
         //get the list of tasks
-        tasksMvvm.getIncompleteTasks()
+        viewModel.getIncompleteTasks()
         observerTasks()
 
         prepareReyclerView()
 
         addTaskSetOnClickListener()
 
+        onTaskSwipe()
+
         onBackButtonPressed()
-
-
 
         return view
     }
 
+
+
     private fun instantiateDatabaseAndViewModel(){
         val taskDatabase = TaskDatabase.getInstance(requireContext())
         val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
-        tasksMvvm = ViewModelProvider(this, viewModelFactory)[ViewTasksViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[ViewTasksViewModel::class.java]
     }
 
     private fun prepareReyclerView() {
@@ -75,7 +80,7 @@ class ViewCurrentTasksFragment : Fragment() {
 
 
     private fun observerTasks() {
-        tasksMvvm.observeIncompleteTasksLiveData().observe(viewLifecycleOwner, Observer { tasks ->
+        viewModel.observeIncompleteTasksLiveData().observe(viewLifecycleOwner, Observer { tasks ->
 
             taskListAdapter.differ.submitList(tasks)
 
@@ -83,6 +88,37 @@ class ViewCurrentTasksFragment : Fragment() {
         })
     }
 
+    private fun onTaskSwipe() {
+
+        val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
+
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,     //the directions the recyclerview scrolls in
+            ItemTouchHelper.LEFT       //direction that you want your item to swipe to
+        ){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ) = true //use this if you want something to happen when we scroll in recyclerview
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition //get the position of viewHolder item being swiped
+                val task = taskListAdapter.differ.currentList[position]
+                viewModel.deleteTask(taskListAdapter.differ.currentList[position])
+
+                Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG).setAction(
+                    "undo",
+                    View.OnClickListener {
+                        viewModel.insertTask(task)
+                    }
+                ).show()
+            }
+
+        }
+
+        //attach the itemTouchHelper to our recyclerview
+        ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvTasks)
+    }
     private fun onBackButtonPressed(){
         //handle back button being pressed
         var backButtonPressed = 0

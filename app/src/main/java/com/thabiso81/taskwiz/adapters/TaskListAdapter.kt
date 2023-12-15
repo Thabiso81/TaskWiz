@@ -3,15 +3,22 @@ package com.thabiso81.taskwiz.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.marginBottom
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
+import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
+import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import java.time.LocalDate
 
-class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
-
+class TaskListAdapter() : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
+    private lateinit var viewModel: ViewTasksViewModel
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
     private val diffUtil = object : DiffUtil.ItemCallback<TaskModel>(){
@@ -35,6 +42,7 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterView
         val task = differ.currentList[position]
         holder.itemBinding.tvTaskName.text = task.taskName
 
+        //adjust the view that displays the description
         if (!task.taskDescription.isNullOrEmpty()){
             if (task.taskDescription.length >= 100){
                 //limit amount of characters shown
@@ -47,6 +55,7 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterView
             holder.itemBinding.tvTaskDescription.visibility = View.GONE
         }
 
+        //adjust the view that displays the date
         if (task.taskDueDate != LocalDate.ofEpochDay(0)){
             holder.itemBinding.tvTaskDueDate.text = "Due on ${task.taskDueDate!!.dayOfMonth} ${task.taskDueDate!!.month}"
         }else{
@@ -54,11 +63,39 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterView
             holder.itemBinding.lytDueDate.visibility = View.GONE
         }
 
+        //adjust margin on the last viewholder item
+        if (position == differ.currentList.size - 1){
+            val param = holder.itemBinding.cardViewItem.layoutParams as ViewGroup.MarginLayoutParams
+            param.setMargins(0,5,0,220)
+            holder.itemBinding.cardViewItem.layoutParams = param
+        }
+
+        //handle the click listener of the checkbox
+        holder.itemBinding.cbxCompleted.setOnCheckedChangeListener{ _, isChecked ->
+            if (isChecked){
+
+            }
+        }
 
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
+
+    private fun instantiateDatabaseAndViewModel(v: View){
+        val taskDatabase = TaskDatabase.getInstance(v.context)
+        val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
+        viewModel = ViewModelProvider(v.context as Fragment, viewModelFactory)[ViewTasksViewModel::class.java]
+    }
+
+//    private fun observerTasks(v: View) {
+//        viewModel.observeIncompleteTasksLiveData().observe(v.context as Fragment , Observer { tasks ->
+//
+//            differ.submitList(tasks)
+//
+//
+//        })
+//    }
 
 }

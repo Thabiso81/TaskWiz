@@ -22,6 +22,11 @@ class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
         incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasks()
     }
 
+    fun insertTask(task: TaskModel){
+        viewModelScope.launch {
+            taskDatabase.taskDao().upsertTask(task)
+        }
+    }
 
 
     /*** methods that will observe states for any changes in their data **/
