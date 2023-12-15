@@ -9,10 +9,10 @@
     <color name="recycler_view_grey3">#4E4F53</color>
     <color name="recycler_view_grey3_trans">#B04E4F53</color>
     <color name="button_color">#E27065</color>
-    <color name="purple">#362e5f</color>
+    <color name="rv_bg">#3c3f46</color>
     <color name="hint_color">#B2B3B3B3</color>
+    <color name="hint_color_trans">#6AB3B3B3</color>
     <color name="textview_color">#B2B3B3</color>
-    <color name="login_hint_color">#6BB3B3B3</color>
     <color name="text_view_color">#E0FFFFFF</color>
     <color name="View_holder_color">#3c3f46</color>
     <color name="create_task_root_view_background">#2D2F31</color>

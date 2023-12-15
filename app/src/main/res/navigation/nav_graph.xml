@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/viewCurrentTasksFragment">
+
+    <fragment
+        android:id="@+id/viewCurrentTasksFragment"
+        android:name="com.thabiso81.taskwiz.view.fragments.ViewCurrentTasksFragment"
+        android:label="fragment_view_current_tasks"
+        tools:layout="@layout/fragment_view_current_tasks" >
+        <action
+            android:id="@+id/action_viewCurrentTasksFragment_to_createTaskFragment"
+            app:destination="@id/createTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createTaskFragment"
+        android:name="com.thabiso81.taskwiz.view.fragments.CreateTaskFragment"
+        android:label="fragment_create_task"
+        tools:layout="@layout/fragment_create_task" >
+        <action
+            android:id="@+id/action_createTaskFragment_to_viewCurrentTasksFragment"
+            app:destination="@id/viewCurrentTasksFragment" />
+    </fragment>
+</navigation>

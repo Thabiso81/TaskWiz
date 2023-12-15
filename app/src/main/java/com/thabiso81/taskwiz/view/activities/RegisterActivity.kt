@@ -1,4 +1,4 @@
-package com.thabiso81.taskwiz.view
+package com.thabiso81.taskwiz.view.activities
 
 import android.content.ContentValues
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {

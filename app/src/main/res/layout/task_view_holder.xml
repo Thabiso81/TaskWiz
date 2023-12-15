@@ -20,11 +20,14 @@
         android:background="@drawable/recycler_view"
         android:backgroundTint="@null">
 
-        <ImageView
+        <CheckBox
             android:id="@+id/imageView3"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:srcCompat="@drawable/ic_task" />
+            android:checked="false"
+            android:button="@drawable/view_custom_checkbox"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleX="2"
+            android:scaleY="2"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -59,7 +62,7 @@
                     android:maxWidth="300dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:text="kjadn jnzcxn zkj cjnx lnxlj skj ncv znxclsknclvjn ck    kjzcnckj zkcn kzj kz ckj kszc kz ckzmc kzc z"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                     android:textColor="@color/textview_color"
                     android:textSize="15dp"/>
                 <!--<TextView

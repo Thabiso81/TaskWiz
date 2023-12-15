@@ -1,31 +1,44 @@
-package com.thabiso81.taskwiz.view
+package com.thabiso81.taskwiz.view.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.thabiso81.taskwiz.database.TaskDatabase
-import com.thabiso81.taskwiz.databinding.ActivityCreateTaskBinding
-import com.thabiso81.taskwiz.model.TaskModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.thabiso81.taskwiz.R
+import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
+import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
 import java.time.LocalDate
 
-class CreateTaskActivity: AppCompatActivity() {
 
-    private lateinit var binding: ActivityCreateTaskBinding
+class CreateTaskFragment : Fragment() {
+    private var _binding: FragmentCreateTaskBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var taskMvvm: CreateTaskViewModel
+    private val defaultCompletionStatus = "Incomplete"
 
     private var taskCompletionDate: LocalDate? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateTaskBinding.inflate(layoutInflater)
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentCreateTaskBinding.inflate(inflater, container, false)
         val view = binding.root
-        setContentView(view)
 
         instantiateDatabaseAndViewModel()
 
@@ -35,6 +48,8 @@ class CreateTaskActivity: AppCompatActivity() {
 
         btnCreateTaskSetOnClickListener()
 
+
+        return view
     }
 
     private fun swtAddDueDateOnClickListener(){
@@ -53,21 +68,20 @@ class CreateTaskActivity: AppCompatActivity() {
 
             if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
                 val newTask = TaskModel(taskDescription = binding.edtTaskDescription.text.toString(),
-                    taskName = binding.edtTaskName.text.toString(), taskDueDate = taskCompletionDate)
+                    taskName = binding.edtTaskName.text.toString(), taskDueDate = taskCompletionDate,
+                    completionStatus = defaultCompletionStatus, taskCreationDate = LocalDate.now())
 
 
                 taskMvvm.insertTask(newTask)
 
-                val nextPage = Intent(this, MainActivity::class.java)
-                startActivity(nextPage)
-                finish()
+                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
             }
 
         }
     }
 
     private fun instantiateDatabaseAndViewModel() {
-        val taskDatabase = TaskDatabase.getInstance(this)
+        val taskDatabase = TaskDatabase.getInstance(requireContext())
         val viewModelFactory = CreateTaskViewModelFactory(taskDatabase)
         taskMvvm = ViewModelProvider(this, viewModelFactory)[CreateTaskViewModel::class.java]
     }
@@ -80,9 +94,8 @@ class CreateTaskActivity: AppCompatActivity() {
                     .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                     .build()
 
-            datePicker.show(supportFragmentManager, "datePicker")
+            datePicker.show(childFragmentManager, "datePicker")
             datePicker.addOnPositiveButtonClickListener {
-                // Respond to positive button click.
 
                 //convert unix epoch value from milliseconds to days
                 taskCompletionDate = LocalDate.ofEpochDay(it / (24 * 60 * 60 * 1000))
@@ -100,14 +113,14 @@ class CreateTaskActivity: AppCompatActivity() {
         var isValid = true
         if (taskName.text.toString().isEmpty()){
             isValid = false
-            Toast.makeText(applicationContext, "Enter a task name", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Enter a task name", Toast.LENGTH_LONG).show()
         }else if (binding.swtAddDueDate.isChecked){
             if (taskDueDate.text.isEmpty()){
                 isValid = false
-                Toast.makeText(applicationContext, "Dont forget your due date!!", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Dont forget your due date!!", Toast.LENGTH_LONG).show()
             }else if (taskCompletionDate!!.isBefore(LocalDate.now())){
                 isValid = false
-                Toast.makeText(applicationContext, "Please select a future date", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
             }
         }
         return isValid

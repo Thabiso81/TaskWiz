@@ -9,25 +9,33 @@ import kotlinx.coroutines.launch
 
 class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
     /**** states that hold the data that will be presented to user ***/
-    private var myTasksLiveData = taskDatabase.taskDao().getAllTasks()
-
+    private var allTasksLiveData = taskDatabase.taskDao().getAllTasks()
+    private var incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasks()
 
 
     /****** logic that gets the data from api or database *****/
     fun getTasks(){
+        allTasksLiveData = taskDatabase.taskDao().getAllTasks()
+    }
 
+    fun getIncompleteTasks(){
+        incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasks()
     }
 
 
 
     /*** methods that will observe states for any changes in their data **/
-    fun observemyTasksLiveData(): LiveData<List<TaskModel>> {
-        return myTasksLiveData
+    fun observeAllTasksLiveData(): LiveData<List<TaskModel>> {
+        return allTasksLiveData
         //returns the live data as soon as it changes.
 
         /* notice difference between LiveData<> and MutableLiveData<> */
     }
 
+    fun observeIncompleteTasksLiveData(): LiveData<List<TaskModel>> {
+        return incompleteTasksLiveData
+
+    }
 
     fun deleteTask(task: TaskModel){
         viewModelScope.launch{

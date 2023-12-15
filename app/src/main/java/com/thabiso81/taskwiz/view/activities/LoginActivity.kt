@@ -1,4 +1,4 @@
-package com.thabiso81.taskwiz.view
+package com.thabiso81.taskwiz.view.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +7,6 @@ import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {

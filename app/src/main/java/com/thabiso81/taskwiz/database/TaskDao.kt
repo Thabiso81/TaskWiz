@@ -19,5 +19,7 @@ interface TaskDao {
     @Query("SELECT * FROM userTasks")
     fun getAllTasks(): LiveData<List<TaskModel>>
 
+    @Query("SELECT * FROM userTasks where completionStatus = 'Incomplete'")
+    fun getAllIncompleteTasks(): LiveData<List<TaskModel>>
 
 }
