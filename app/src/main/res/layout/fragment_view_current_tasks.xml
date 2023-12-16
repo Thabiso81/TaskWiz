@@ -101,6 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
+                android:layoutAnimation="@anim/recyclerview_animation"
                 android:textAlignment="gravity"
                 app:backgroundTint="@null"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

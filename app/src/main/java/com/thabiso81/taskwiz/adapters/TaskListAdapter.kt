@@ -3,6 +3,7 @@ package com.thabiso81.taskwiz.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox.OnCheckedStateChangedListener
 import com.google.android.material.snackbar.Snackbar
+import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
@@ -76,6 +78,7 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             holder.itemBinding.cardViewItem.layoutParams = param
         }
 
+
         //remove divider if there is no description
 
         //handle the click listener of the checkbox
@@ -89,6 +92,17 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             }
         }
 
+        //adjust viewholder if there is no description or due date
+        if(task.taskDescription.isNullOrEmpty() || task.taskDueDate == LocalDate.ofEpochDay(0)){
+            holder.itemBinding.divider.visibility = View.GONE
+        }
+
+        //animate recyclerview items
+        holder.itemBinding.cardViewItem.startAnimation(
+            AnimationUtils.loadAnimation(
+                holder.itemBinding.cardViewItem.context, R.anim.slide_in
+            )
+        )
     }
 
     override fun getItemCount(): Int {
