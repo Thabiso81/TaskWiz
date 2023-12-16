@@ -76,6 +76,8 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             holder.itemBinding.cardViewItem.layoutParams = param
         }
 
+        //remove divider if there is no description
+
         //handle the click listener of the checkbox
         holder.itemBinding.cbxCompleted.isChecked = false
         holder.itemBinding.cbxCompleted.setOnCheckedChangeListener{ _, isChecked ->
