@@ -8,6 +8,9 @@
     <string name="add_a_task_btn_label">Add a task</string>
     <string name="create_task_btn_label">Done</string>
     <dimen name="checkbox_size">30dp</dimen>
+
+    <string name="taskCompleteMessage1">Great job! No outstanding tasks at the moment. Take a moment to celebrate your accomplishments! 🎉</string>
+    <string name="taskCompleteMessage2">Congratulations! 🎉 You\'ve tackled all your tasks! Take a well-deserved break.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

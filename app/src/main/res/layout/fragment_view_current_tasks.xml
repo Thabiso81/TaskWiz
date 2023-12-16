@@ -54,9 +54,11 @@
             >
 
             <RelativeLayout
+                android:id="@+id/lytToDoLabel"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -66,6 +68,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:width="120dp"
+                    android:layout_marginBottom="2dp"
                     android:fontFamily="@font/asap_medium"
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
@@ -80,6 +83,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="right|bottom"
+                    android:layout_marginBottom="2dp"
                     android:layout_toEndOf="@+id/edtTaskTitle"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="right"
@@ -87,14 +91,16 @@
                     android:text="0/10 complete"
                     android:textColor="@color/hint_color"
                     android:textSize="13dp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/edit_text_color" />
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/edit_text_color" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTasks"
@@ -122,6 +128,53 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             />
+
+        <LinearLayout
+            android:id="@+id/lytNoTasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottiAnimation"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                app:lottie_rawRes="@raw/tasks_complete_animation"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true"/>
+
+            <LinearLayout
+                android:id="@+id/lytMessages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All done for today..."
+                    android:textColor="@color/bright_white"
+                    android:textSize="18dp"
+                    android:gravity="top"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/taskCompleteMessage2"
+                    android:textColor="@color/textview_color"
+                    android:textSize="14dp"
+                    android:fontFamily="@font/andika"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </LinearLayout>

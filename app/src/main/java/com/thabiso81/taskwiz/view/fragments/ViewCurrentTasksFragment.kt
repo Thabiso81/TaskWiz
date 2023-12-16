@@ -62,10 +62,13 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         countCompleteTasks()
 
+        onTasksComplete()
+
         onBackButtonPressed()
 
         return view
     }
+
 
 
 
@@ -87,12 +90,17 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
 
     private fun observerTasks() {
+
         viewModel.observeIncompleteTasksLiveData().observe(viewLifecycleOwner, Observer { tasks ->
 
-            taskListAdapter.differ.submitList(tasks)
-
-
+            if (tasks.isNullOrEmpty()){
+                onNoTasksAvailable()
+            }else{
+                onTasksAvailable()
+                taskListAdapter.differ.submitList(tasks)
+            }
         })
+
     }
 
     private fun onTaskSwipe() {
@@ -117,6 +125,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                     "undo",
                     View.OnClickListener {
                         viewModel.insertTask(task)
+                        if (position == 0) taskListAdapter.notifyDataSetChanged()
                     }
                 ).show()
             }
@@ -144,6 +153,28 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         ).show()
     }
 
+    private fun onTasksComplete() {
+
+    }
+
+    private fun onNoTasksAvailable() {
+        binding.rvTasks.visibility = View.GONE
+        binding.lytToDoLabel.visibility = View.GONE
+        binding.lytNoTasks.visibility = View.VISIBLE
+        binding.lytNoTasks.startAnimation(
+            AnimationUtils.loadAnimation(
+                binding.lytNoTasks.context, R.anim.slide_in
+            )
+        )
+        binding.lottiAnimation.playAnimation()
+
+    }
+    private fun onTasksAvailable() {
+        binding.rvTasks.visibility = View.VISIBLE
+        binding.lytToDoLabel.visibility = View.VISIBLE
+        binding.lottiAnimation.pauseAnimation()
+        binding.lytNoTasks.visibility = View.GONE
+    }
     private fun onBackButtonPressed(){
         //handle back button being pressed
         var backButtonPressed = 0
@@ -169,6 +200,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
             }
         })
     }
+
 
 
     private fun addTaskSetOnClickListener(){
