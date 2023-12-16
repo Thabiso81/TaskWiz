@@ -52,6 +52,8 @@ class CreateTaskFragment : Fragment() {
 
         swtAddDueDateOnClickListener()
 
+        imgEnableDueDateOnClickListener()
+
         edtCompletionDateSetOnclickListener()
 
         btnCreateTaskSetOnClickListener()
@@ -60,6 +62,9 @@ class CreateTaskFragment : Fragment() {
 
         return view
     }
+
+
+
 
     private fun swtAddDueDateOnClickListener(){
         binding.swtAddDueDate.setOnCheckedChangeListener { _buttonView, _isChecked ->
@@ -71,6 +76,12 @@ class CreateTaskFragment : Fragment() {
         }
     }
 
+    private fun imgEnableDueDateOnClickListener() {
+        binding.imgEnableDueDate.setOnClickListener {
+            binding.swtAddDueDate.isChecked = true
+        }
+    }
+
     private fun btnCreateTaskSetOnClickListener() {
         binding.btnCreateTask.setOnClickListener() {
 
@@ -79,7 +90,6 @@ class CreateTaskFragment : Fragment() {
                 val newTask = TaskModel(taskDescription = binding.edtTaskDescription.text.toString(),
                     taskName = binding.edtTaskName.text.toString(), taskDueDate = taskCompletionDate,
                     completionStatus = defaultCompletionStatus, taskCreationDate = LocalDate.now())
-
 
                 taskMvvm.insertTask(newTask)
 
@@ -118,6 +128,18 @@ class CreateTaskFragment : Fragment() {
         }
     }
 
+
+    private fun onBackButtonPressed(){
+        //handle back button being pressed
+        val dispatcher = requireActivity().onBackPressedDispatcher
+        dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // handle back press in fragments.
+               findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+            }
+        })
+    }
+
     fun inputValid(taskName: EditText, taskDueDate: TextView): Boolean{
         var isValid = true
         if (taskName.text.toString().isEmpty()){
@@ -135,14 +157,4 @@ class CreateTaskFragment : Fragment() {
         return isValid
     }
 
-    private fun onBackButtonPressed(){
-        //handle back button being pressed
-        val dispatcher = requireActivity().onBackPressedDispatcher
-        dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // handle back press in fragments.
-               findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
-            }
-        })
-    }
 }

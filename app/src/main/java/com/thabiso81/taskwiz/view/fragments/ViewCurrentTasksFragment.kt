@@ -59,6 +59,8 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         onTaskSwipe()
 
+        countCompleteTasks()
+
         onBackButtonPressed()
 
         return view
@@ -119,6 +121,10 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         //attach the itemTouchHelper to our recyclerview
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvTasks)
+    }
+
+    private fun countCompleteTasks() {
+        //viewModel.obser
     }
 
     override fun onCheckboxClick(task: TaskModel) {

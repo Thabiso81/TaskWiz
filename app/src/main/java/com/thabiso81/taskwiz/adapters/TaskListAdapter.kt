@@ -72,7 +72,7 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
         //adjust margin on the last viewholder item
         if (position == differ.currentList.size - 1){
             val param = holder.itemBinding.cardViewItem.layoutParams as ViewGroup.MarginLayoutParams
-            param.setMargins(0,5,0,220)
+            param.setMargins(0,10,0,220)
             holder.itemBinding.cardViewItem.layoutParams = param
         }
 
