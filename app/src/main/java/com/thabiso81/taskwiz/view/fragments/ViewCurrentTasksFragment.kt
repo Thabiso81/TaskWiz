@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -48,6 +50,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         _binding = FragmentViewCurrentTasksBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        setupUi()
         instantiateDatabaseAndViewModel()
 
         //get the list of tasks
@@ -69,7 +72,10 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         return view
     }
 
-
+    private fun setupUi() {
+        binding.lytNoTasks.visibility = View.GONE
+        binding.lytTaskStats.visibility = View.GONE
+    }
 
 
     private fun instantiateDatabaseAndViewModel(){
@@ -158,8 +164,9 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
     }
 
     private fun onNoTasksAvailable() {
+
         binding.rvTasks.visibility = View.GONE
-        binding.lytToDoLabel.visibility = View.GONE
+        binding.lytTaskStats.visibility = View.GONE
         binding.lytNoTasks.visibility = View.VISIBLE
         binding.lytNoTasks.startAnimation(
             AnimationUtils.loadAnimation(
@@ -169,9 +176,11 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         binding.lottiAnimation.playAnimation()
 
     }
+
+
     private fun onTasksAvailable() {
         binding.rvTasks.visibility = View.VISIBLE
-        binding.lytToDoLabel.visibility = View.VISIBLE
+        binding.lytTaskStats.visibility = View.VISIBLE
         binding.lottiAnimation.pauseAnimation()
         binding.lytNoTasks.visibility = View.GONE
     }
