@@ -24,6 +24,10 @@
                motion:motionTarget="@+id/header"
                motion:framePosition="100"
                android:scaleY="0" />
+           <!--<KeyAttribute
+               motion:motionTarget="@+id/edtRemainingTasks"
+               motion:framePosition="100"
+               android:scaleX="1.2" />-->
        </KeyFrameSet>
         <OnSwipe
             motion:touchAnchorId="@+id/header"
@@ -39,6 +43,13 @@
             android:layout_height="1dp"
             android:layout_width="match_parent"
              />
+        <Constraint
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@id/edtTaskTitle"
+            android:layout_marginTop="10dp"
+            android:id="@+id/edtRemainingTasks"
+            motion:layout_constraintStart_toEndOf="@+id/edtTaskTitle" />
 
     </ConstraintSet>
 </MotionScene>
