@@ -25,11 +25,11 @@
             android:id="@+id/cbxCompleted"
             android:checked="false"
             android:button="@drawable/view_custom_checkbox"
-            app:buttonTint="@color/button_color"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleX="2"
-            android:scaleY="2"/>
+            app:buttonTint="@color/task_checkbox_color"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleX="1"
+            android:scaleY="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
