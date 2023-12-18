@@ -92,8 +92,8 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             }
         }
 
-        //adjust viewholder if there is no description or due date
-        if(task.taskDescription.isNullOrEmpty() || task.taskDueDate == LocalDate.ofEpochDay(0)){
+        //adjust viewholder if (description == null) && (due date == null)
+        if(task.taskDescription.isNullOrEmpty() && task.taskDueDate == LocalDate.ofEpochDay(0)){
             holder.itemBinding.divider.visibility = View.GONE
         }
 
