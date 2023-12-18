@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-
+<!--alpha  deals with the capacity (0 = 0% capacity and 1 = 100% capacity)-->
+<!--XDelta  deals withs horizontal movement (-100%{start} = offscreen, 0%{middle} = onscreen, 100%{end} = offscreen-->
+<!--yDelta  deals withs vertical movement (-100%{start} = offscreen, 0%{middle} = onscreen, 100%{end} = offscreen-->
     <!--the fade in of the rv item from outside to in-->
     <alpha android:fromAlpha="0"
         android:toAlpha="1"
         android:duration="700"/>
 
-    <translate android:fromXDelta="-100%"
+    <translate android:fromXDelta=  "-100%"
         android:toXDelta="0%"
         android:duration="700"/>
+
 </set>
