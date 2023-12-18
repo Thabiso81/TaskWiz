@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 
 class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener {
@@ -204,9 +205,11 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 // handle back press in fragments.
                 backButtonPressed++
                 if (backButtonPressed >= 2){
-                    val intent  = Intent(requireContext(), LoginActivity::class.java)
+                    /*val intent  = Intent(requireContext(), LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
+                    startActivity(intent)*/
+
+                    exitProcess(1)
 
 
                 }else if(backButtonPressed < 2){
