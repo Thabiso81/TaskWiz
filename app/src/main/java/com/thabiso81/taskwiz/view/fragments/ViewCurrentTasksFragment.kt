@@ -75,7 +75,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     private fun setupUi() {
         binding.lytNoTasks.visibility = View.GONE
-        binding.lytTaskStats.visibility = View.GONE
+        setUpUI_Invisibile()
     }
 
 
@@ -164,10 +164,21 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     }
 
+    private fun setUpUI_Invisibile(){
+        binding.edtRemainingTasks.visibility = View.GONE
+        binding.edtRemainingTasks.visibility = View.GONE
+        binding.lytDivider.visibility = View.GONE
+    }
+
+    private fun setUpUI_Visibile(){
+        binding.edtRemainingTasks.visibility = View.VISIBLE
+        binding.edtRemainingTasks.visibility = View.VISIBLE
+        binding.lytDivider.visibility = View.VISIBLE
+    }
     private fun onNoTasksAvailable() {
 
         binding.rvTasks.visibility = View.GONE
-        binding.lytTaskStats.visibility = View.GONE
+        setUpUI_Visibile()
         binding.lytNoTasks.visibility = View.VISIBLE
         binding.lytNoTasks.startAnimation(
             AnimationUtils.loadAnimation(
@@ -181,7 +192,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     private fun onTasksAvailable() {
         binding.rvTasks.visibility = View.VISIBLE
-        binding.lytTaskStats.visibility = View.VISIBLE
+        setUpUI_Invisibile()
         binding.lottiAnimation.pauseAnimation()
         binding.lytNoTasks.visibility = View.GONE
     }
