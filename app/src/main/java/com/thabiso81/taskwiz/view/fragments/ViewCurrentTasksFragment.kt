@@ -164,19 +164,33 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     }
 
+    fun setVisibility(visibility: Int, view: View){
+        val motionLayout = view.parent as MotionLayout
+        motionLayout.constraintSetIds.forEach {
+            val constraintSet = motionLayout.getConstraintSet(it) ?: return@forEach
+            constraintSet.setVisibility(this.id, visibility)
+            constraintSet.applyTo(motionLayout)
+        }
+    }
+
     private fun setUpUI_Invisibile(){
-        binding.edtRemainingTasks.visibility = MotionLayout.GONE
-        binding.edtRemainingTasks.visibility = MotionLayout.GONE
-        binding.lytDivider.visibility = MotionLayout.GONE
-        binding.lytDivider.visibility = MotionLayout.GONE
+        /*setVisibility(MotionLayout.INVISIBLE, binding.edtRemainingTasks)
+        setVisibility(MotionLayout.INVISIBLE, binding.edtTaskTitle)
+        setVisibility(MotionLayout.INVISIBLE, binding.header)
+        setVisibility(MotionLayout.INVISIBLE, binding.lytDivider)*/
+
+        //binding.edtRemainingTasks.visibility = MotionLayout.GONE
+        //binding.edtRemainingTasks.visibility = MotionLayout.GONE
+        //binding.lytDivider.visibility = MotionLayout.GONE
+        //binding.lytDivider.visibility = MotionLayout.GONE
 
     }
 
     private fun setUpUI_Visibile(){
         binding.edtRemainingTasks.visibility = MotionLayout.VISIBLE
-        binding.edtRemainingTasks.visibility = MotionLayout.VISIBLE
+        binding.edtTaskTitle.visibility = MotionLayout.VISIBLE
         binding.lytDivider.visibility = MotionLayout.VISIBLE
-        binding.lytDivider.visibility = MotionLayout.VISIBLE
+        binding.header.visibility = MotionLayout.VISIBLE
     }
     private fun onNoTasksAvailable() {
 

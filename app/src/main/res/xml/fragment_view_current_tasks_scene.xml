@@ -29,6 +29,7 @@
                motion:motionTarget="@+id/edtRemainingTasks"
                motion:framePosition="100"
                android:scaleX="1" />
+           <KeyAttribute />
 
        </KeyFrameSet>
         <OnSwipe
@@ -89,14 +90,14 @@
 
         <Constraint
             motion:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
+            android:layout_width="1dp"
             android:layout_height="3dp"
             motion:layout_constraintTop_toBottomOf="@id/edtTaskTitle"
-            motion:layout_constraintStart_toStartOf="parent"
             android:id="@+id/lytDivider"
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
-            motion:visibilityMode="normal">
+            motion:visibilityMode="ignore"
+            android:visibility="invisible">
 
         </Constraint>
         <Constraint
