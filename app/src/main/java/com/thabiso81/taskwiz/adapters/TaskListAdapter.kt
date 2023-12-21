@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.CheckBox
 import android.widget.CompoundButton.OnCheckedChangeListener
 import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
@@ -25,7 +26,7 @@ import java.time.LocalDate
 
 class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener) : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
     interface OnCheckboxClickListener {
-        fun onCheckboxClick(task: TaskModel)
+        fun onCheckboxClick(task: TaskModel, view: CheckBox)
     }
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
@@ -87,12 +88,12 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             if (position != RecyclerView.NO_POSITION){
 
                 if (isChecked){
-                    onCheckboxClickListener.onCheckboxClick(task)
+                    onCheckboxClickListener.onCheckboxClick(task, holder.itemBinding.cbxCompleted)
                 }
             }
         }
 
-        //adjust viewholder if (description == null) && (due date == null)
+        //adjust viewholder views if (description == null) && (due date == null)
         if(task.taskDescription.isNullOrEmpty() && task.taskDueDate == LocalDate.ofEpochDay(0)){
             holder.itemBinding.divider.visibility = View.GONE
         }

@@ -124,6 +124,11 @@ class CreateTaskFragment : Fragment() {
                             "${if (LocalDate.now().year == taskCompletionDate!!.year) "" else taskCompletionDate!!.year}"
                 )
 
+                if (taskCompletionDate!!.isBefore(LocalDate.now())){
+                    binding.edtCompletionDate.text=""
+                    Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
+                }
+
             }
         }
     }

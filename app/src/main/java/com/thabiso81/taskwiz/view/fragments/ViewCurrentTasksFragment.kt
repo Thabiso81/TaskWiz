@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -75,7 +76,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     private fun setupUi() {
         binding.lytNoTasks.visibility = View.GONE
-        setUpUI_Invisibile()
+        //setUpUI_Invisibile()
     }
 
 
@@ -104,6 +105,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 onNoTasksAvailable()
             }else{
                 onTasksAvailable()
+
                 taskListAdapter.differ.submitList(tasks)
             }
         })
@@ -131,6 +133,11 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG).setAction(
                     "undo",
                     View.OnClickListener {
+                        binding.lytNoTasks.startAnimation(
+                            AnimationUtils.loadAnimation(
+                                binding.lytNoTasks.context, R.anim.slide_out
+                            )
+                        )
                         viewModel.insertTask(task)
                         if (position == 0) taskListAdapter.notifyDataSetChanged()
                     }
@@ -147,18 +154,29 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         //viewModel.obser
     }
 
-    override fun onCheckboxClick(task: TaskModel) {
+    override fun onCheckboxClick(task: TaskModel, view: CheckBox) {
         task.completionStatus = "Complete"
         viewModel.insertTask(task)
 
         Snackbar.make(binding.rvTasks, "Task completed", Snackbar.LENGTH_LONG).setAction(
             "undo",
             View.OnClickListener {
+                view.isChecked = false
+
+                binding.lytNoTasks.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        binding.lytNoTasks.context, R.anim.slide_out
+                    )
+                )
                 task.completionStatus = "Incomplete"
                 viewModel.insertTask(task)
+
+                countCompleteTasks()
+
             }
         ).show()
     }
+
 
     private fun onTasksComplete() {
 
@@ -173,29 +191,26 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         }
     }
 
-    private fun setUpUI_Invisibile(){
-        /*setVisibility(MotionLayout.INVISIBLE, binding.edtRemainingTasks)
-        setVisibility(MotionLayout.INVISIBLE, binding.edtTaskTitle)
-        setVisibility(MotionLayout.INVISIBLE, binding.header)
-        setVisibility(MotionLayout.INVISIBLE, binding.lytDivider)*/
+    /*private fun setUpUI_Invisibile(){
 
-        //binding.edtRemainingTasks.visibility = MotionLayout.GONE
-        //binding.edtRemainingTasks.visibility = MotionLayout.GONE
-        //binding.lytDivider.visibility = MotionLayout.GONE
-        //binding.lytDivider.visibility = MotionLayout.GONE
+        binding.edtRemainingTasks.alpha = 0f
+        binding.edtTaskTitle.alpha = 0f
+        binding.header.alpha = 0f
+        binding.lytDivider.alpha = 0f
 
-    }
+    }*/
 
-    private fun setUpUI_Visibile(){
-        binding.edtRemainingTasks.visibility = MotionLayout.VISIBLE
-        binding.edtTaskTitle.visibility = MotionLayout.VISIBLE
-        binding.lytDivider.visibility = MotionLayout.VISIBLE
-        binding.header.visibility = MotionLayout.VISIBLE
-    }
+    /*private fun setUpUI_Visibile(){
+        binding.edtRemainingTasks.alpha = 1f
+        binding.edtTaskTitle.alpha = 1f
+        binding.lytDivider.alpha = 1f
+        binding.header.alpha = 1f
+    }*/
     private fun onNoTasksAvailable() {
 
         binding.rvTasks.visibility = View.GONE
-        setUpUI_Visibile()
+        //setUpUI_Invisibile()
+        binding.edtRemainingTasks.text = "All done"
         binding.lytNoTasks.visibility = View.VISIBLE
         binding.lytNoTasks.startAnimation(
             AnimationUtils.loadAnimation(
@@ -209,7 +224,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     private fun onTasksAvailable() {
         binding.rvTasks.visibility = View.VISIBLE
-        setUpUI_Visibile()
+        //setUpUI_Visibile()
         binding.lottiAnimation.pauseAnimation()
         binding.lytNoTasks.visibility = View.GONE
     }
