@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_view_current_tasks" >
         <action
             android:id="@+id/action_viewCurrentTasksFragment_to_createTaskFragment"
-            app:destination="@id/createTaskFragment" />
+            app:destination="@id/createTaskFragment"
+            app:enterAnim="@anim/fragment_slide_up"
+            app:exitAnim="@null"
+            app:popEnterAnim="@anim/fragment_slide_up"
+            app:popExitAnim="@anim/fragment_slide_down"/>
     </fragment>
     <fragment
         android:id="@+id/createTaskFragment"
@@ -21,6 +25,7 @@
         tools:layout="@layout/fragment_create_task" >
         <action
             android:id="@+id/action_createTaskFragment_to_viewCurrentTasksFragment"
-            app:destination="@id/viewCurrentTasksFragment" />
+            app:destination="@id/viewCurrentTasksFragment"/>
+
     </fragment>
 </navigation>

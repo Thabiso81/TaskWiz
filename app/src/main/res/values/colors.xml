@@ -10,6 +10,9 @@
     <color name="recycler_view_grey3">#4E4F53</color>
     <color name="recycler_view_grey3_trans">#B04E4F53</color>
     <color name="button_color">#E27065</color>
+    <color name="delete_color">#DAE81616</color>
+    <color name="delete_color2">#DAF62727</color>
+    <color name="delete_color3">#2D2F31</color>
     <color name="task_checkbox_color">#42C824</color>
     <color name="rv_bg">#3c3f46</color>
     <color name="hint_color">#B2B3B3B3</color>

@@ -74,4 +74,7 @@ dependencies {
     //Lottie animation
     implementation("com.airbnb.android:lottie:3.4.0")
 
+    //Recyclerview onswipe gestures
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
 }

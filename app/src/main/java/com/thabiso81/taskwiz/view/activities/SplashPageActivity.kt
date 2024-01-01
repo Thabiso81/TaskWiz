@@ -1,6 +1,7 @@
 package com.thabiso81.taskwiz.view.activities
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -20,9 +21,16 @@ class SplashPageActivity : AppCompatActivity() {
         binding.splashAppIcon.alpha = 0f
         binding.splashAppIcon.animate().setDuration(1600).alpha(1f).withEndAction{
             val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
 
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            val animationBundle = ActivityOptions.makeCustomAnimation(
+                this,
+                android.R.anim.fade_in,  // Enter animation
+                android.R.anim.fade_out  // Exit animation
+            ).toBundle()
+            
+            startActivity(intent, animationBundle)
+
+            //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
         }
 

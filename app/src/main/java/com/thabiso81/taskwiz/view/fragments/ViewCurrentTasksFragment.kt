@@ -1,8 +1,11 @@
 package com.thabiso81.taskwiz.view.fragments
 
-import android.content.Intent
+import android.R
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,26 +13,26 @@ import android.view.animation.AnimationUtils
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
 import com.thabiso81.taskwiz.model.TaskModel
-import com.thabiso81.taskwiz.view.activities.LoginActivity
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
@@ -113,7 +116,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
     }
 
     private fun onTaskSwipe() {
-
+    //confugure swipe gesture for recyclerview
         val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(
 
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,     //the directions the recyclerview scrolls in
@@ -135,7 +138,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                     View.OnClickListener {
                         binding.lytNoTasks.startAnimation(
                             AnimationUtils.loadAnimation(
-                                binding.lytNoTasks.context, R.anim.slide_out
+                                binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_out
                             )
                         )
                         viewModel.insertTask(task)
@@ -144,11 +147,55 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 ).show()
             }
 
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addBackgroundColor(ContextCompat.getColor(requireContext(), com.thabiso81.taskwiz.R.color.delete_color2))
+                    .addSwipeLeftActionIcon(com.thabiso81.taskwiz.R.drawable.ic_delete)
+                    .create()
+                    .decorate()
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
         }
+
+
+
+
 
         //attach the itemTouchHelper to our recyclerview
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvTasks)
     }
+
+    private val Int.dp
+        get() = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            toFloat(), resources.displayMetrics
+        ).roundToInt()
 
     private fun countCompleteTasks() {
         //viewModel.obser
@@ -165,7 +212,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
                 binding.lytNoTasks.startAnimation(
                     AnimationUtils.loadAnimation(
-                        binding.lytNoTasks.context, R.anim.slide_out
+                        binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_out
                     )
                 )
                 task.completionStatus = "Incomplete"
@@ -182,39 +229,14 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     }
 
-    fun setVisibility(visibility: Int, view: View){
-        val motionLayout = view.parent as MotionLayout
-        motionLayout.constraintSetIds.forEach {
-            val constraintSet = motionLayout.getConstraintSet(it) ?: return@forEach
-            constraintSet.setVisibility(this.id, visibility)
-            constraintSet.applyTo(motionLayout)
-        }
-    }
-
-    /*private fun setUpUI_Invisibile(){
-
-        binding.edtRemainingTasks.alpha = 0f
-        binding.edtTaskTitle.alpha = 0f
-        binding.header.alpha = 0f
-        binding.lytDivider.alpha = 0f
-
-    }*/
-
-    /*private fun setUpUI_Visibile(){
-        binding.edtRemainingTasks.alpha = 1f
-        binding.edtTaskTitle.alpha = 1f
-        binding.lytDivider.alpha = 1f
-        binding.header.alpha = 1f
-    }*/
     private fun onNoTasksAvailable() {
 
         binding.rvTasks.visibility = View.GONE
-        //setUpUI_Invisibile()
         binding.edtRemainingTasks.text = "All done"
         binding.lytNoTasks.visibility = View.VISIBLE
         binding.lytNoTasks.startAnimation(
             AnimationUtils.loadAnimation(
-                binding.lytNoTasks.context, R.anim.slide_in
+                binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_in
             )
         )
         binding.lottiAnimation.playAnimation()
@@ -224,7 +246,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
     private fun onTasksAvailable() {
         binding.rvTasks.visibility = View.VISIBLE
-        //setUpUI_Visibile()
         binding.lottiAnimation.pauseAnimation()
         binding.lytNoTasks.visibility = View.GONE
     }
@@ -261,7 +282,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
     private fun addTaskSetOnClickListener(){
 
         binding.bvAddTask.setOnClickListener {
-            findNavController().navigate(R.id.action_viewCurrentTasksFragment_to_createTaskFragment)
+            findNavController().navigate(com.thabiso81.taskwiz.R.id.action_viewCurrentTasksFragment_to_createTaskFragment)
         }
     }
 
