@@ -4,13 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
     /**** states that hold the data that will be presented to user ***/
     private var allTasksLiveData = taskDatabase.taskDao().getAllTasks()
-    private var incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasks()
+    private var incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasksWithChecklists()
 
 
     /****** logic that gets the data from api or database *****/
@@ -18,28 +23,35 @@ class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
         allTasksLiveData = taskDatabase.taskDao().getAllTasks()
     }
 
-    fun getIncompleteTasks(){
-        incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasks()
+    fun getTaskById(id: String){
+        allTasksLiveData = taskDatabase.taskDao().getAllTasks()
     }
 
-    fun insertTask(task: TaskModel){
+    fun getIncompleteTasks(){
+        incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasksWithChecklists()
+    }
+
+   /* fun insertTask(task: TaskModel): Long{
+        var taskId: Long = 0
         viewModelScope.launch {
-            taskDatabase.taskDao().upsertTask(task)
+            taskId = taskDatabase.taskDao().upsertTask(task)
+        }
+
+        return taskId
+    }*/
+    suspend fun insertTask(task: TaskModel): Long {
+        return suspendCancellableCoroutine { continuation ->
+            viewModelScope.launch {
+                val taskId = taskDatabase.taskDao().upsertTask(task)
+                continuation.resume(taskId)
+            }
         }
     }
 
-
-    /*** methods that will observe states for any changes in their data **/
-    fun observeAllTasksLiveData(): LiveData<List<TaskModel>> {
-        return allTasksLiveData
-        //returns the live data as soon as it changes.
-
-        /* notice difference between LiveData<> and MutableLiveData<> */
-    }
-
-    fun observeIncompleteTasksLiveData(): LiveData<List<TaskModel>> {
-        return incompleteTasksLiveData
-
+    fun insertChecklist(task: TaskModel, checklist: TaskChecklistModel){
+        viewModelScope.launch {
+            taskDatabase.taskDao().upsertChecklist(checklist)
+        }
     }
 
     fun deleteTask(task: TaskModel){
@@ -47,4 +59,14 @@ class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
             taskDatabase.taskDao().deleteTask(task)
         }
     }
+
+    /*** methods that will observe states for any changes in their data **/
+
+    fun observeIncompleteTasksLiveData(): LiveData<List<TaskWithChecklist>> {
+        return incompleteTasksLiveData
+
+    }
+
+
+
 }

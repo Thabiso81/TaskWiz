@@ -18,24 +18,29 @@ import com.google.android.material.checkbox.MaterialCheckBox.OnCheckedStateChang
 import com.google.android.material.snackbar.Snackbar
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import java.time.LocalDate
 
-class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener) : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
+class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener, private val onTaskClickListener: OnTaskClickListener) : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
     interface OnCheckboxClickListener {
         fun onCheckboxClick(task: TaskModel, view: CheckBox)
     }
+
+    interface OnTaskClickListener {
+        fun onTaskClick(task: TaskModel)
+    }
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
-    private val diffUtil = object : DiffUtil.ItemCallback<TaskModel>(){
-        override fun areItemsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
-            return oldItem.taskId == newItem.taskId
+    private val diffUtil = object : DiffUtil.ItemCallback<TaskWithChecklist>(){
+        override fun areItemsTheSame(oldItem: TaskWithChecklist, newItem: TaskWithChecklist): Boolean {
+            return oldItem.task.taskId == newItem.task.taskId
         }
 
-        override fun areContentsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+        override fun areContentsTheSame(oldItem: TaskWithChecklist, newItem: TaskWithChecklist): Boolean {
             return oldItem == newItem
         }
 
@@ -48,7 +53,8 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
     }
 
     override fun onBindViewHolder(holder: TaskListAdapterViewHolder, position: Int) {
-        val task = differ.currentList[position]
+        val task = differ.currentList[position].task
+        val checklist = differ.currentList[position].checklist
         holder.itemBinding.tvTaskName.text = task.taskName
 
         //adjust the view that displays the description
@@ -91,6 +97,11 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
                     onCheckboxClickListener.onCheckboxClick(task, holder.itemBinding.cbxCompleted)
                 }
             }
+        }
+
+        //handle the click listener of the the entire task
+        holder.itemBinding.lytTaskDetails.setOnClickListener {
+            onTaskClickListener.onTaskClick(task)
         }
 
         //adjust viewholder views if (description == null) && (due date == null)

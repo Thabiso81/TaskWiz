@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:gravity="center_vertical|left"
+    android:orientation="horizontal"
+    android:background="@android:color/transparent"
+    android:backgroundTint="@null"
+    android:layout_marginVertical="5dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+        <CheckBox
+            android:id="@+id/cbxCompleted"
+            android:checked="false"
+            android:button="@drawable/view_custom_checklist_checkbox"
+            app:buttonTint="@color/white"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleX="1"
+            android:scaleY="1"/>
+
+            <TextView
+                android:id="@+id/tvChecklistItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Task Name"
+                android:layout_marginVertical="15dp"
+                android:layout_marginEnd="16dp"
+                android:maxLines="5"
+                android:ellipsize="end"
+                android:textColor="@color/bright_white"
+                android:textSize="17dp"/>
+
+</LinearLayout>

@@ -6,12 +6,18 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 
 @Dao
 interface TaskDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertTask(task: TaskModel) //updates and inserts. updates if row already exists
+    suspend fun upsertTask(task: TaskModel): Long //updates and inserts. updates if row already exists
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertChecklist(checkList: TaskChecklistModel)
 
     @Delete
     suspend fun deleteTask(task:TaskModel) //notice the suspend functions
@@ -19,7 +25,12 @@ interface TaskDao {
     @Query("SELECT * FROM userTasks")
     fun getAllTasks(): LiveData<List<TaskModel>>
 
+    @Transaction
+    @Query("SELECT * FROM userTasks where taskId = :taskId")
+    fun getTaskWithTaskCheckListById(taskId: String): LiveData<List<TaskWithChecklist>>
+
+
     @Query("SELECT * FROM userTasks where completionStatus = 'Incomplete'")
-    fun getAllIncompleteTasks(): LiveData<List<TaskModel>>
+    fun getAllIncompleteTasksWithChecklists(): LiveData<List<TaskWithChecklist>>
 
 }

@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 
-@Database(entities = [TaskModel::class], version = 5) //version 5 is already used up
+@Database(entities = [TaskModel::class, TaskChecklistModel::class], version = 6)
 @TypeConverters(TaskTypeConverter::class)
 abstract class TaskDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDao

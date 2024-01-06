@@ -12,7 +12,7 @@ data class TaskModel(
     var completionStatus: String?,
     val taskDescription: String?,
     val taskDueDate: LocalDate?,
-    val taskCreationDate: LocalDate?
+    val taskCreationDate: LocalDate?,
 )
 // This will be our Data model. Each variable represents a piece of the data that will be on
 //each recyclerView item.

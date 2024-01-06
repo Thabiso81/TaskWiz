@@ -62,7 +62,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:paddingLeft="10dp"
                 android:text="Add due date"
-                android:textColor="#ACACAC"
+                android:textColor="@color/button_color"
                 android:textSize="16sp"
                 app:switchPadding="30dp"
                 app:thumbTint="@color/button_color"
@@ -165,6 +165,28 @@
                         android:textSize="15dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tvAddChecklist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/poppins_medium"
+                android:drawableLeft="@drawable/ic_add_checklist"
+                android:drawableTint="@color/button_color"
+                android:drawablePadding="15dp"
+                android:paddingLeft="10dp"
+                android:text="Add Checklist"
+                android:textColor="@color/button_color"
+                android:textSize="16sp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvChecklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clickable="false"/>
         </LinearLayout>
 
 

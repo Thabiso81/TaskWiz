@@ -23,8 +23,11 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var tasksMvvm: ViewTasksViewModel
-    private lateinit var taskListAdapter: TaskListAdapter
+    internal val viewModel: ViewTasksViewModel by lazy {
+        val taskDatabase = TaskDatabase.getInstance(this)
+        val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
+        ViewModelProvider(this, viewModelFactory)[ViewTasksViewModel::class.java]
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

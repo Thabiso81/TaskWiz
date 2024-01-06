@@ -25,6 +25,8 @@ import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
 import com.thabiso81.taskwiz.model.TaskModel
+import com.thabiso81.taskwiz.view.activities.MainActivity
+import com.thabiso81.taskwiz.view.fragments.bottomSheet.TaskEditBottomSheetFragment
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -36,11 +38,12 @@ import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
-class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener {
+class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener, TaskListAdapter.OnTaskClickListener {
     private var _binding: FragmentViewCurrentTasksBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: ViewTasksViewModel
+    private lateinit var  viewModel: ViewTasksViewModel
+
     private lateinit var taskListAdapter: TaskListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,13 +87,11 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
 
     private fun instantiateDatabaseAndViewModel(){
-        val taskDatabase = TaskDatabase.getInstance(requireContext())
-        val viewModelFactory = ViewTasksViewModelFactory(taskDatabase)
-        viewModel = ViewModelProvider(this, viewModelFactory)[ViewTasksViewModel::class.java]
+        viewModel = (activity as MainActivity).viewModel
     }
 
     private fun prepareReyclerView() {
-        taskListAdapter = TaskListAdapter(this)
+        taskListAdapter = TaskListAdapter(this, this)
         binding.rvTasks.apply {
             adapter = taskListAdapter
 
@@ -109,7 +110,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
             }else{
                 onTasksAvailable()
 
-                taskListAdapter.differ.submitList(tasks)
+                taskListAdapter.differ.submitList(tasks.toMutableList())
             }
         })
 
@@ -130,8 +131,8 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition //get the position of viewHolder item being swiped
-                val task = taskListAdapter.differ.currentList[position]
-                viewModel.deleteTask(taskListAdapter.differ.currentList[position])
+                val task = taskListAdapter.differ.currentList[position].task
+                viewModel.deleteTask(taskListAdapter.differ.currentList[position].task)
 
                 Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG).setAction(
                     "undo",
@@ -141,8 +142,12 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                                 binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_out
                             )
                         )
-                        viewModel.insertTask(task)
-                        if (position == 0) taskListAdapter.notifyDataSetChanged()
+                            CoroutineScope(Dispatchers.IO).launch{
+                                viewModel.insertTask(task)
+                            }
+
+                            if (position == 0) taskListAdapter.notifyDataSetChanged()
+
                     }
                 ).show()
             }
@@ -156,6 +161,10 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
+
+                //Code attribution
+                //https://github.com/xabaras/RecyclerViewSwipeDecorator
+
                 RecyclerViewSwipeDecorator.Builder(
                     c,
                     recyclerView,
@@ -201,28 +210,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         //viewModel.obser
     }
 
-    override fun onCheckboxClick(task: TaskModel, view: CheckBox) {
-        task.completionStatus = "Complete"
-        viewModel.insertTask(task)
-
-        Snackbar.make(binding.rvTasks, "Task completed", Snackbar.LENGTH_LONG).setAction(
-            "undo",
-            View.OnClickListener {
-                view.isChecked = false
-
-                binding.lytNoTasks.startAnimation(
-                    AnimationUtils.loadAnimation(
-                        binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_out
-                    )
-                )
-                task.completionStatus = "Incomplete"
-                viewModel.insertTask(task)
-
-                countCompleteTasks()
-
-            }
-        ).show()
-    }
 
 
     private fun onTasksComplete() {
@@ -277,8 +264,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         })
     }
 
-
-
     private fun addTaskSetOnClickListener(){
 
         binding.bvAddTask.setOnClickListener {
@@ -286,5 +271,52 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         }
     }
 
+/******************** callbacks ***********************************************/
+//callback for when task checkbox is checked on recyclerview
+    override fun onCheckboxClick(task: TaskModel, view: CheckBox) {
+        task.completionStatus = "Complete"
+
+
+        CoroutineScope(Dispatchers.IO).launch{
+            viewModel.insertTask(task)
+        }
+
+        Snackbar.make(binding.rvTasks, "Task completed", Snackbar.LENGTH_LONG).setAction(
+            "undo",
+            View.OnClickListener {
+                view.isChecked = false
+
+                binding.lytNoTasks.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        binding.lytNoTasks.context, com.thabiso81.taskwiz.R.anim.slide_out
+                    )
+                )
+                task.completionStatus = "Incomplete"
+
+                    CoroutineScope(Dispatchers.IO).launch{
+                        viewModel.insertTask(task)
+                    }
+
+                    countCompleteTasks()
+
+            }
+        ).show()
+
+
+
+
+
+    }
+
+    //callback for when task is clicked on recyclerview
+    override fun onTaskClick(task: TaskModel) {
+        //instantiate bottom sheet Fragment and pass the taskId as an argument
+        val taskEditBottomSheetFragment = TaskEditBottomSheetFragment.newInstance(
+            task.taskId.toString(),
+            task.taskName.toString(),
+            task.taskDescription.toString(),
+            task.taskDueDate.toString())
+        taskEditBottomSheetFragment.show(childFragmentManager, "Task Details")
+    }
 
 }

@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.R
+import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
+import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
 import com.thabiso81.taskwiz.model.TaskModel
@@ -30,6 +32,8 @@ import java.time.LocalDate
 class CreateTaskFragment : Fragment() {
     private var _binding: FragmentCreateTaskBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var checkListAdapter: TaskChecklistAdapter
 
     private lateinit var taskMvvm: CreateTaskViewModel
     private val defaultCompletionStatus = "Incomplete"
@@ -50,11 +54,15 @@ class CreateTaskFragment : Fragment() {
 
         instantiateDatabaseAndViewModel()
 
+        prepareRecyclerView()
+
         swtAddDueDateOnClickListener()
 
         imgEnableDueDateOnClickListener()
 
         edtCompletionDateSetOnclickListener()
+
+        tvAddChecklistsetOnclickListener()
 
         btnCreateTaskSetOnClickListener()
 
@@ -63,7 +71,17 @@ class CreateTaskFragment : Fragment() {
         return view
     }
 
+    private fun tvAddChecklistsetOnclickListener() {
 
+    }
+
+    private fun prepareRecyclerView() {
+        checkListAdapter = TaskChecklistAdapter()
+        binding.rvChecklist.apply {
+            adapter = checkListAdapter
+
+        }
+    }
 
 
     private fun swtAddDueDateOnClickListener(){
@@ -89,9 +107,14 @@ class CreateTaskFragment : Fragment() {
             if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
                 val newTask = TaskModel(taskDescription = binding.edtTaskDescription.text.toString(),
                     taskName = binding.edtTaskName.text.toString(), taskDueDate = taskCompletionDate,
-                    completionStatus = defaultCompletionStatus, taskCreationDate = LocalDate.now())
+                    completionStatus = defaultCompletionStatus, taskCreationDate = LocalDate.now(),
+                   )
 
-                taskMvvm.insertTask(newTask)
+
+                CoroutineScope(Dispatchers.IO).launch{
+                    taskMvvm.insertTask(newTask)
+                }
+
 
                 findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
             }
