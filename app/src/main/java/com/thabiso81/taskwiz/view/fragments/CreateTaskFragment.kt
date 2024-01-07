@@ -1,30 +1,30 @@
 package com.thabiso81.taskwiz.view.fragments
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
-import com.thabiso81.taskwiz.adapters.TaskListAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
-import com.thabiso81.taskwiz.view.activities.LoginActivity
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -34,6 +34,7 @@ class CreateTaskFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var checkListAdapter: TaskChecklistAdapter
+    private var checklistItems = mutableListOf<String>()
 
     private lateinit var taskMvvm: CreateTaskViewModel
     private val defaultCompletionStatus = "Incomplete"
@@ -72,7 +73,50 @@ class CreateTaskFragment : Fragment() {
     }
 
     private fun tvAddChecklistsetOnclickListener() {
+        binding.tvAddChecklist.setOnClickListener {
+            binding.edtChecklistItem.showKeyboard()
+        }
 
+        binding.imgEnterChecklist.setOnClickListener {
+
+            addChecklistItem()
+            binding.edtChecklistItem.hideKeyboard()
+        }
+
+        /*binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
+            if(!hasFocus){
+                view.hideKeyboard()
+            }
+        }*/
+    }
+
+    private fun addChecklistItem() {
+
+        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
+            checklistItems.add(binding.edtChecklistItem.text.toString())
+
+            checkListAdapter.differ.submitList(checklistItems)
+        }
+
+    }
+
+    fun View.showKeyboard() {
+        binding.lytChecklist.visibility = View.VISIBLE
+        binding.btnCreateTask.visibility = View.GONE
+
+        this.requestFocus()
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun View.hideKeyboard() {
+        binding.lytChecklist.visibility = View.GONE
+        binding.btnCreateTask.visibility = View.VISIBLE
+
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+
+        binding.edtChecklistItem.text.clear()
     }
 
     private fun prepareRecyclerView() {
@@ -105,10 +149,13 @@ class CreateTaskFragment : Fragment() {
 
 
             if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
-                val newTask = TaskModel(taskDescription = binding.edtTaskDescription.text.toString(),
-                    taskName = binding.edtTaskName.text.toString(), taskDueDate = taskCompletionDate,
-                    completionStatus = defaultCompletionStatus, taskCreationDate = LocalDate.now(),
-                   )
+                val newTask = TaskModel(
+                    taskDescription = binding.edtTaskDescription.text.toString(),
+                    taskName = binding.edtTaskName.text.toString(),
+                    taskDueDate = taskCompletionDate,
+                    completionStatus = defaultCompletionStatus,
+                    taskCreationDate = LocalDate.now(),
+                )
 
 
                 CoroutineScope(Dispatchers.IO).launch{

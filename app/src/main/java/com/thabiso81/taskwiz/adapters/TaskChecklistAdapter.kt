@@ -14,13 +14,13 @@ class TaskChecklistAdapter: RecyclerView.Adapter<TaskChecklistAdapter.TaskCheckl
 
     inner class TaskChecklistAdapterViewHolder(val itemBinding: ChecklistViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
-    private val diffUtil = object : DiffUtil.ItemCallback<TaskChecklistModel>(){
-        override fun areItemsTheSame(oldItem: TaskChecklistModel, newItem: TaskChecklistModel): Boolean {
-            return oldItem.taskId == newItem.taskId
+    private val diffUtil = object : DiffUtil.ItemCallback<String>(){
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem.equals(newItem)
         }
 
-        override fun areContentsTheSame(oldItem: TaskChecklistModel, newItem: TaskChecklistModel): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem.equals(newItem)
         }
 
     }
@@ -31,7 +31,7 @@ class TaskChecklistAdapter: RecyclerView.Adapter<TaskChecklistAdapter.TaskCheckl
 
     override fun onBindViewHolder(holder: TaskChecklistAdapterViewHolder, position: Int) {
         val item = differ.currentList[position]
-        holder.itemBinding.tvChecklistItemName.text = item.checklistItemTitle
+        holder.itemBinding.tvChecklistItemName.text = item.toString()
         holder.itemBinding.cbxCompleted.isChecked = false
     }
 

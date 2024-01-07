@@ -10,7 +10,7 @@
     <LinearLayout
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:backgroundTint="@null"
         android:orientation="vertical"
         android:gravity="top"
@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="5dp"
@@ -153,7 +153,7 @@
                     <TextView
                         android:id="@+id/edtCompletionDate"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:paddingHorizontal="5dp"
                         android:gravity="left|center_vertical"
                         android:focusableInTouchMode="false"
@@ -185,7 +185,10 @@
                 android:id="@+id/rvChecklist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="true"
                 android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/checklist_view_holder"
                 android:clickable="false"/>
         </LinearLayout>
 
@@ -204,6 +207,41 @@
             android:textSize="19dp"
             android:fontFamily="@font/poppins_medium"
             app:backgroundTint="@null" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/lytChecklist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="bottom"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/grey">
+            <EditText
+                android:id="@+id/edtChecklistItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minHeight="20dp"
+                android:layout_margin="5dp"
+                android:imeOptions="actionDone"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/poppins_medium"
+                android:padding="10dp"
+                android:background="@android:color/transparent"
+                android:hint="Add checklist item..."
+                android:textAlignment="textStart"
+                android:textColor="@color/bright_white"
+                android:textColorHint="@color/hint_color"
+                android:textSize="15dp" />
+            <ImageView
+                android:id="@+id/imgEnterChecklist"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_enter"
+                android:layout_gravity="right|center_vertical"/>
+        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>
 </ScrollView>

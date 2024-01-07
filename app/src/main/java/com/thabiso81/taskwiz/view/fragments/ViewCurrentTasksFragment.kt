@@ -293,11 +293,11 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 )
                 task.completionStatus = "Incomplete"
 
-                    CoroutineScope(Dispatchers.IO).launch{
-                        viewModel.insertTask(task)
-                    }
+                CoroutineScope(Dispatchers.IO).launch{
+                    viewModel.insertTask(task)
+                }
 
-                    countCompleteTasks()
+                countCompleteTasks()
 
             }
         ).show()
