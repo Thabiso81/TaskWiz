@@ -20,7 +20,7 @@ class TaskChecklistAdapter: RecyclerView.Adapter<TaskChecklistAdapter.TaskCheckl
         }
 
         override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem.equals(newItem)
+            return oldItem == newItem
         }
 
     }

@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,6 @@ import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
-import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
@@ -53,129 +51,45 @@ class CreateTaskFragment : Fragment() {
         _binding = FragmentCreateTaskBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        instantiateDatabaseAndViewModel()
+        instantiate_Database_And_ViewModel()
 
-        prepareRecyclerView()
+        prepare_RecyclerView()
 
-        swtAddDueDateOnClickListener()
+        /*swtAddDueDateOnClickListener()
 
-        imgEnableDueDateOnClickListener()
+        imgEnableDueDateOnClickListener()*/
 
-        edtCompletionDateSetOnclickListener()
 
-        tvAddChecklistsetOnclickListener()
+        edtCompletionDate_OnClickListener()
 
-        btnCreateTaskSetOnClickListener()
+        tvAddChecklist_OnClickListener()
 
-        onBackButtonPressed()
+        imgAddMoreChecklistItems_OnClickListener()
+
+        edtChecklist_Item_On_Fucus_Change_Listener()
+
+        btnCreateTask_OnClickListener()
+
+        on_Back_Button_Pressed()
 
         return view
     }
 
-    private fun tvAddChecklistsetOnclickListener() {
-        binding.tvAddChecklist.setOnClickListener {
-            binding.edtChecklistItem.showKeyboard()
-        }
-
-        binding.imgEnterChecklist.setOnClickListener {
-
-            addChecklistItem()
-            binding.edtChecklistItem.hideKeyboard()
-        }
-
-        /*binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
-            if(!hasFocus){
-                view.hideKeyboard()
-            }
-        }*/
-    }
-
-    private fun addChecklistItem() {
-
-        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
-            checklistItems.add(binding.edtChecklistItem.text.toString())
-
-            checkListAdapter.differ.submitList(checklistItems)
-        }
-
-    }
-
-    fun View.showKeyboard() {
-        binding.lytChecklist.visibility = View.VISIBLE
-        binding.btnCreateTask.visibility = View.GONE
-
-        this.requestFocus()
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    fun View.hideKeyboard() {
-        binding.lytChecklist.visibility = View.GONE
-        binding.btnCreateTask.visibility = View.VISIBLE
-
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-
-        binding.edtChecklistItem.text.clear()
-    }
-
-    private fun prepareRecyclerView() {
-        checkListAdapter = TaskChecklistAdapter()
-        binding.rvChecklist.apply {
-            adapter = checkListAdapter
-
-        }
-    }
-
-
-    private fun swtAddDueDateOnClickListener(){
-        binding.swtAddDueDate.setOnCheckedChangeListener { _buttonView, _isChecked ->
-            if (_isChecked){
-                binding.edtCompletionDate.visibility = View.VISIBLE
-            }else{
-                binding.edtCompletionDate.visibility = View.GONE
-            }
-        }
-    }
-
-    private fun imgEnableDueDateOnClickListener() {
-        binding.imgEnableDueDate.setOnClickListener {
-            binding.swtAddDueDate.isChecked = true
-        }
-    }
-
-    private fun btnCreateTaskSetOnClickListener() {
-        binding.btnCreateTask.setOnClickListener() {
-
-
-            if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
-                val newTask = TaskModel(
-                    taskDescription = binding.edtTaskDescription.text.toString(),
-                    taskName = binding.edtTaskName.text.toString(),
-                    taskDueDate = taskCompletionDate,
-                    completionStatus = defaultCompletionStatus,
-                    taskCreationDate = LocalDate.now(),
-                )
-
-
-                CoroutineScope(Dispatchers.IO).launch{
-                    taskMvvm.insertTask(newTask)
-                }
-
-
-                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
-            }
-
-        }
-    }
-
-    private fun instantiateDatabaseAndViewModel() {
+    private fun instantiate_Database_And_ViewModel() {
         val taskDatabase = TaskDatabase.getInstance(requireContext())
         val viewModelFactory = CreateTaskViewModelFactory(taskDatabase)
         taskMvvm = ViewModelProvider(this, viewModelFactory)[CreateTaskViewModel::class.java]
     }
 
-    private fun edtCompletionDateSetOnclickListener() {
+    private fun prepare_RecyclerView() {
+        checkListAdapter = TaskChecklistAdapter()
+        binding.rvChecklist.apply {
+            setHasFixedSize(false)
+            adapter = checkListAdapter
+        }
+    }
+
+    private fun edtCompletionDate_OnClickListener() {
         binding.edtCompletionDate.setOnClickListener {
             val datePicker =
                 MaterialDatePicker.Builder.datePicker()
@@ -203,8 +117,130 @@ class CreateTaskFragment : Fragment() {
         }
     }
 
+    /*private fun swtAddDueDateOnClickListener(){
+        binding.swtAddDueDate.setOnCheckedChangeListener { _buttonView, _isChecked ->
+            if (_isChecked){
+                binding.edtCompletionDate.visibility = View.VISIBLE
+            }else{
+                binding.edtCompletionDate.visibility = View.GONE
+            }
+        }
+    }*/
 
-    private fun onBackButtonPressed(){
+    /*private fun imgEnableDueDateOnClickListener() {
+        binding.imgEnableDueDate.setOnClickListener {
+            binding.swtAddDueDate.isChecked = true
+        }
+    }*/
+
+    private fun tvAddChecklist_OnClickListener() {
+        binding.tvAddChecklist.setOnClickListener {
+            binding.edtChecklistItem.showKeyboard()
+        }
+
+        binding.imgEnterChecklist.setOnClickListener {
+
+            add_Checklist_Item()
+            binding.edtChecklistItem.hideKeyboard()
+        }
+
+        /*binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
+            if(!hasFocus){
+                view.hideKeyboard()
+            }
+        }*/
+    }
+
+    private fun imgAddMoreChecklistItems_OnClickListener() {
+        binding.imgAddMoreChecklistItems.setOnClickListener {
+            binding.edtChecklistItem.showKeyboard()
+        }
+
+        binding.imgEnterChecklist.setOnClickListener {
+            add_Checklist_Item()
+            binding.edtChecklistItem.hideKeyboard()
+        }
+
+    }
+
+    private fun edtChecklist_Item_On_Fucus_Change_Listener() {
+        binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus){
+                binding.edtChecklistItem.hideKeyboard()
+            }
+        }
+    }
+
+    private fun add_Checklist_Item() {
+
+        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
+            checklistItems.add(binding.edtChecklistItem.text.toString())
+
+            checkListAdapter.differ.submitList(checklistItems)
+        }
+
+    }
+
+    fun View.showKeyboard() {
+        binding.lytChecklist.visibility = View.VISIBLE
+        binding.btnCreateTask.visibility = View.GONE
+
+        this.requestFocus()
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun View.hideKeyboard() {
+
+        //if there are checklist items, adjust UI
+        if (!checklistItems.isNullOrEmpty()){
+            binding.tvAddChecklist.visibility = View.GONE
+            binding.lytChecklistHeader.visibility = View.VISIBLE
+        }else{
+            binding.tvAddChecklist.visibility = View.VISIBLE
+            binding.lytChecklistHeader.visibility = View.GONE
+        }
+
+        binding.lytChecklist.visibility = View.GONE
+        binding.btnCreateTask.visibility = View.VISIBLE
+
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+
+        binding.edtChecklistItem.text.clear()
+    }
+
+    private fun btnCreateTask_OnClickListener() {
+        binding.btnCreateTask.setOnClickListener() {
+
+
+            if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
+                val newTask = TaskModel(
+                    taskDescription = binding.edtTaskDescription.text.toString(),
+                    taskName = binding.edtTaskName.text.toString(),
+                    taskDueDate = taskCompletionDate,
+                    completionStatus = defaultCompletionStatus,
+                    taskCreationDate = LocalDate.now(),
+                )
+
+
+                CoroutineScope(Dispatchers.IO).launch{
+                    taskMvvm.insertTask(newTask)
+                }
+
+
+                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+            }
+
+        }
+    }
+
+
+
+
+
+
+    private fun on_Back_Button_Pressed(){
         //handle back button being pressed
         val dispatcher = requireActivity().onBackPressedDispatcher
         dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
@@ -219,8 +255,9 @@ class CreateTaskFragment : Fragment() {
         var isValid = true
         if (taskName.text.toString().isEmpty()){
             isValid = false
-            Toast.makeText(requireContext(), "Enter a task name", Toast.LENGTH_LONG).show()
-        }else if (binding.swtAddDueDate.isChecked){
+            Toast.makeText(requireContext(), "Enter a task title", Toast.LENGTH_LONG).show()
+        }
+        /*else if (binding.swtAddDueDate.isChecked){
             if (taskDueDate.text.isEmpty()){
                 isValid = false
                 Toast.makeText(requireContext(), "Dont forget your due date!!", Toast.LENGTH_LONG).show()
@@ -228,7 +265,7 @@ class CreateTaskFragment : Fragment() {
                 isValid = false
                 Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
             }
-        }
+        }*/
         return isValid
     }
 
