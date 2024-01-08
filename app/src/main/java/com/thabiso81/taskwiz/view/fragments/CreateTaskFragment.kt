@@ -58,6 +58,8 @@ class CreateTaskFragment : Fragment() {
 
         edtCompletionDate_OnClickListener()
 
+        add_ChecklistItem()
+
         tvAddChecklist_OnClickListener()
 
         imgAddMoreChecklistItems_OnClickListener()
@@ -84,6 +86,28 @@ class CreateTaskFragment : Fragment() {
             adapter = checkListAdapter
         }
     }
+
+    private fun add_ChecklistItem() {
+        binding.imgEnterChecklist.setOnClickListener {
+
+            add_Checklist_Item()
+
+            //if there are checklist items, adjust UI
+            if (!checklistItems.isNullOrEmpty()){
+                binding.tvAddChecklist.visibility = View.GONE
+                binding.lytChecklistHeader.visibility = View.VISIBLE
+            }else{
+                binding.tvAddChecklist.visibility = View.VISIBLE
+                binding.lytChecklistHeader.visibility = View.GONE
+            }
+
+
+            binding.edtChecklistItem.text.clear()
+        }
+    }
+
+
+    /********************** Listeners start **********************/
 
     private fun edtCompletionDate_OnClickListener() {
         binding.edtCompletionDate.setOnClickListener {
@@ -116,25 +140,14 @@ class CreateTaskFragment : Fragment() {
 
     private fun tvAddChecklist_OnClickListener() {
         binding.tvAddChecklist.setOnClickListener {
-            binding.edtChecklistItem.showKeyboard()
-        }
-
-        binding.imgEnterChecklist.setOnClickListener {
-
-            add_Checklist_Item()
-            binding.edtChecklistItem.hideKeyboard()
+            binding.edtChecklistItem.show_Checklist_Keyboard()
         }
 
     }
 
     private fun imgAddMoreChecklistItems_OnClickListener() {
         binding.imgAddMoreChecklistItems.setOnClickListener {
-            binding.edtChecklistItem.showKeyboard()
-        }
-
-        binding.imgEnterChecklist.setOnClickListener {
-            add_Checklist_Item()
-            binding.edtChecklistItem.hideKeyboard()
+            binding.edtChecklistItem.show_Checklist_Keyboard()
         }
 
     }
@@ -145,46 +158,6 @@ class CreateTaskFragment : Fragment() {
                 binding.lytChecklist.visibility = View.GONE
             }
         }
-    }
-
-    private fun add_Checklist_Item() {
-        prepare_RecyclerView()
-
-        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
-            checklistItems.add(binding.edtChecklistItem.text.toString())
-
-            checkListAdapter.differ.submitList(checklistItems)
-
-        }
-
-    }
-
-    fun View.showKeyboard() {
-        binding.lytChecklist.visibility = View.VISIBLE
-
-        this.requestFocus()
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    fun View.hideKeyboard() {
-
-        //if there are checklist items, adjust UI
-        if (!checklistItems.isNullOrEmpty()){
-            binding.tvAddChecklist.visibility = View.GONE
-            binding.lytChecklistHeader.visibility = View.VISIBLE
-        }else{
-            binding.tvAddChecklist.visibility = View.VISIBLE
-            binding.lytChecklistHeader.visibility = View.GONE
-        }
-
-        //binding.lytChecklist.visibility = View.GONE
-        //binding.btnCreateTask.visibility = View.VISIBLE
-
-        //val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        //inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-
-        binding.edtChecklistItem.text.clear()
     }
 
     private fun btnCreateTask_OnClickListener() {
@@ -211,11 +184,27 @@ class CreateTaskFragment : Fragment() {
 
         }
     }
+    /********************** Listeners end **********************/
 
+    private fun add_Checklist_Item() {
+        prepare_RecyclerView()
 
+        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
+            checklistItems.add(binding.edtChecklistItem.text.toString())
 
+            checkListAdapter.differ.submitList(checklistItems)
 
+        }
 
+    }
+
+    fun View.show_Checklist_Keyboard() {
+        binding.lytChecklist.visibility = View.VISIBLE
+
+        this.requestFocus()
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
 
     private fun on_Back_Button_Pressed(){
         //handle back button being pressed
@@ -238,15 +227,6 @@ class CreateTaskFragment : Fragment() {
             isValid = false
             Toast.makeText(requireContext(), "Enter a task title", Toast.LENGTH_LONG).show()
         }
-        /*else if (binding.swtAddDueDate.isChecked){
-            if (taskDueDate.text.isEmpty()){
-                isValid = false
-                Toast.makeText(requireContext(), "Dont forget your due date!!", Toast.LENGTH_LONG).show()
-            }else if (taskCompletionDate!!.isBefore(LocalDate.now())){
-                isValid = false
-                Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
-            }
-        }*/
         return isValid
     }
 
