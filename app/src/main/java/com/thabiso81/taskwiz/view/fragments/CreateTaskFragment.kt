@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -54,11 +55,6 @@ class CreateTaskFragment : Fragment() {
         instantiate_Database_And_ViewModel()
 
         prepare_RecyclerView()
-
-        /*swtAddDueDateOnClickListener()
-
-        imgEnableDueDateOnClickListener()*/
-
 
         edtCompletionDate_OnClickListener()
 
@@ -117,21 +113,6 @@ class CreateTaskFragment : Fragment() {
         }
     }
 
-    /*private fun swtAddDueDateOnClickListener(){
-        binding.swtAddDueDate.setOnCheckedChangeListener { _buttonView, _isChecked ->
-            if (_isChecked){
-                binding.edtCompletionDate.visibility = View.VISIBLE
-            }else{
-                binding.edtCompletionDate.visibility = View.GONE
-            }
-        }
-    }*/
-
-    /*private fun imgEnableDueDateOnClickListener() {
-        binding.imgEnableDueDate.setOnClickListener {
-            binding.swtAddDueDate.isChecked = true
-        }
-    }*/
 
     private fun tvAddChecklist_OnClickListener() {
         binding.tvAddChecklist.setOnClickListener {
@@ -144,11 +125,6 @@ class CreateTaskFragment : Fragment() {
             binding.edtChecklistItem.hideKeyboard()
         }
 
-        /*binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
-            if(!hasFocus){
-                view.hideKeyboard()
-            }
-        }*/
     }
 
     private fun imgAddMoreChecklistItems_OnClickListener() {
@@ -166,24 +142,25 @@ class CreateTaskFragment : Fragment() {
     private fun edtChecklist_Item_On_Fucus_Change_Listener() {
         binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus){
-                binding.edtChecklistItem.hideKeyboard()
+                binding.lytChecklist.visibility = View.GONE
             }
         }
     }
 
     private fun add_Checklist_Item() {
+        prepare_RecyclerView()
 
         if(!binding.edtChecklistItem.text.isNullOrEmpty()){
             checklistItems.add(binding.edtChecklistItem.text.toString())
 
             checkListAdapter.differ.submitList(checklistItems)
+
         }
 
     }
 
     fun View.showKeyboard() {
         binding.lytChecklist.visibility = View.VISIBLE
-        binding.btnCreateTask.visibility = View.GONE
 
         this.requestFocus()
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -201,11 +178,11 @@ class CreateTaskFragment : Fragment() {
             binding.lytChecklistHeader.visibility = View.GONE
         }
 
-        binding.lytChecklist.visibility = View.GONE
-        binding.btnCreateTask.visibility = View.VISIBLE
+        //binding.lytChecklist.visibility = View.GONE
+        //binding.btnCreateTask.visibility = View.VISIBLE
 
-        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+        //val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 
         binding.edtChecklistItem.text.clear()
     }
@@ -246,7 +223,11 @@ class CreateTaskFragment : Fragment() {
         dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // handle back press in fragments.
-               findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+                if(binding.lytChecklist.isVisible){
+                    binding.lytChecklist.visibility = View.GONE
+                }else{
+                    findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+                }
             }
         })
     }

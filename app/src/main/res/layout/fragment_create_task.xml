@@ -25,6 +25,41 @@
             android:orientation="vertical"
             >
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnCreateTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/create_task_root_view_background"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_done"
+                        app:tint="@color/button_color"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@android:color/transparent"
+                        android:text="Done"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/button_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
 
             <ImageView
                 android:layout_width="251dp"
@@ -238,21 +273,6 @@
                 android:clickable="false"/>
 
         </androidx.core.widget.NestedScrollView>
-
-        <Button
-            android:id="@+id/btnCreateTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="190dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:background="@drawable/view_background_add_task_button"
-            android:layout_gravity="center"
-            android:text="@string/create_task_btn_label"
-            android:textColor="@color/bright_white"
-            android:textSize="19dp"
-            android:fontFamily="@font/poppins_medium"
-            app:backgroundTint="@null" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/lytChecklist"
