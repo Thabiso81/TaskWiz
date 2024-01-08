@@ -1,18 +1,27 @@
 package com.thabiso81.taskwiz.view.fragments
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
@@ -27,7 +36,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
-class CreateTaskFragment : Fragment() {
+class CreateTaskFragment : Fragment(){
     private var _binding: FragmentCreateTaskBinding? = null
     private val binding get() = _binding!!
 
@@ -53,7 +62,7 @@ class CreateTaskFragment : Fragment() {
 
         instantiate_Database_And_ViewModel()
 
-        prepare_RecyclerView()
+        prepare_RecyclerView(binding.rvChecklist)
 
         /*swtAddDueDateOnClickListener()
 
@@ -66,7 +75,7 @@ class CreateTaskFragment : Fragment() {
 
         imgAddMoreChecklistItems_OnClickListener()
 
-        edtChecklist_Item_On_Fucus_Change_Listener()
+       // edtChecklist_Item_On_Fucus_Change_Listener()
 
         btnCreateTask_OnClickListener()
 
@@ -81,12 +90,16 @@ class CreateTaskFragment : Fragment() {
         taskMvvm = ViewModelProvider(this, viewModelFactory)[CreateTaskViewModel::class.java]
     }
 
-    private fun prepare_RecyclerView() {
+    private fun prepare_RecyclerView(view: RecyclerView) {
         checkListAdapter = TaskChecklistAdapter()
-        binding.rvChecklist.apply {
+        view.apply {
             setHasFixedSize(false)
             adapter = checkListAdapter
         }
+
+        /*if (!checklistItems.isNullOrEmpty()){
+            checkListAdapter.differ.submitList(checklistItems)
+        }*/
     }
 
     private fun edtCompletionDate_OnClickListener() {
@@ -135,14 +148,16 @@ class CreateTaskFragment : Fragment() {
 
     private fun tvAddChecklist_OnClickListener() {
         binding.tvAddChecklist.setOnClickListener {
-            binding.edtChecklistItem.showKeyboard()
+           // binding.edtChecklistItem.showKeyboard()
+
+            showChecklistDialog(binding.tvAddChecklist)
         }
 
-        binding.imgEnterChecklist.setOnClickListener {
+       /* binding.imgEnterChecklist.setOnClickListener {
 
             add_Checklist_Item()
             binding.edtChecklistItem.hideKeyboard()
-        }
+        }*/
 
         /*binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
             if(!hasFocus){
@@ -151,45 +166,85 @@ class CreateTaskFragment : Fragment() {
         }*/
     }
 
+
     private fun imgAddMoreChecklistItems_OnClickListener() {
         binding.imgAddMoreChecklistItems.setOnClickListener {
-            binding.edtChecklistItem.showKeyboard()
+            //binding.edtChecklistItem.showKeyboard()
+
+            showChecklistDialog(binding.imgAddMoreChecklistItems)
         }
 
-        binding.imgEnterChecklist.setOnClickListener {
+        /*binding.imgEnterChecklist.setOnClickListener {
             add_Checklist_Item()
-            binding.edtChecklistItem.hideKeyboard()
-        }
+            binding.tvAddChecklist.visibility = View.GONE
+            binding.lytChecklistHeader.visibility = View.VISIBLE
+
+            binding.edtChecklistItem.text.clear()
+        }*/
 
     }
 
-    private fun edtChecklist_Item_On_Fucus_Change_Listener() {
+    private fun showChecklistDialog(v: View){
+
+        val dialog = Dialog((v.context as FragmentActivity))
+        dialog.show()
+        dialog.window!!.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window!!.attributes.windowAnimations = R.style.DialogAnimation
+        dialog.window!!.setGravity(Gravity.BOTTOM)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.add_checklist_bottom_sheet)
+
+        val btnAddChecklistItem = dialog.findViewById<ImageView>(R.id.imgEnterChecklist)
+        val edtChecklistItem = dialog.findViewById<EditText>(R.id.edtChecklistItem)
+        val rvChecklists = dialog.findViewById<RecyclerView>(R.id.rvChecklist)
+
+
+        btnAddChecklistItem.setOnClickListener {
+            prepare_RecyclerView(rvChecklists)
+
+            add_Checklist_Item(edtChecklistItem)
+
+            edtChecklistItem.text.clear()
+        }
+
+        val dispatcher = requireActivity().onBackPressedDispatcher
+        dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // handle back press in fragments.
+                dialog.dismiss()
+            }
+        })
+
+    }
+
+    /*private fun edtChecklist_Item_On_Fucus_Change_Listener() {
         binding.edtChecklistItem.setOnFocusChangeListener { view, hasFocus ->
             if (!hasFocus){
                 binding.edtChecklistItem.hideKeyboard()
             }
         }
-    }
+    }*/
 
-    private fun add_Checklist_Item() {
+    private fun add_Checklist_Item(view: EditText) {
 
-        if(!binding.edtChecklistItem.text.isNullOrEmpty()){
-            checklistItems.add(binding.edtChecklistItem.text.toString())
+        if(!view.text.isNullOrEmpty()){
+            checklistItems.add(view.text.toString())
 
             checkListAdapter.differ.submitList(checklistItems)
         }
 
     }
 
-    fun View.showKeyboard() {
+    /*fun View.showKeyboard() {
         binding.lytChecklist.visibility = View.VISIBLE
-        binding.btnCreateTask.visibility = View.GONE
 
         this.requestFocus()
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-    }
+    }*/
 
+/*
     fun View.hideKeyboard() {
 
         //if there are checklist items, adjust UI
@@ -202,13 +257,13 @@ class CreateTaskFragment : Fragment() {
         }
 
         binding.lytChecklist.visibility = View.GONE
-        binding.btnCreateTask.visibility = View.VISIBLE
 
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
 
         binding.edtChecklistItem.text.clear()
     }
+*/
 
     private fun btnCreateTask_OnClickListener() {
         binding.btnCreateTask.setOnClickListener() {
@@ -245,13 +300,19 @@ class CreateTaskFragment : Fragment() {
         val dispatcher = requireActivity().onBackPressedDispatcher
         dispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // handle back press in fragments.
-               findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+
+                /*if (binding.edtChecklistItem.isFocused){
+                    binding.edtChecklistItem.hideKeyboard()
+                }else{*/
+                    // handle back press in fragments.
+                    findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+                //}
+
             }
         })
     }
 
-    fun inputValid(taskName: EditText, taskDueDate: TextView): Boolean{
+    private fun inputValid(taskName: EditText, taskDueDate: TextView): Boolean{
         var isValid = true
         if (taskName.text.toString().isEmpty()){
             isValid = false
@@ -268,5 +329,6 @@ class CreateTaskFragment : Fragment() {
         }*/
         return isValid
     }
+
 
 }

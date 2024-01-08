@@ -8,7 +8,6 @@
     tools:context=".view.fragments.CreateTaskFragment">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundTint="@null"
@@ -25,6 +24,40 @@
             android:orientation="vertical"
             >
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnCreateTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="@color/create_task_root_view_background"
+                app:cardCornerRadius="10dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_done"
+                        app:tint="@color/button_color"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@android:color/transparent"
+                        android:text="Done"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/button_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
 
             <ImageView
                 android:layout_width="251dp"
@@ -52,22 +85,6 @@
                 android:layout_marginBottom="40dp"
                 android:layout_marginHorizontal="10dp"/>
 
-            <!--<com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/swtAddDueDate"
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:checked="true"
-                android:fontFamily="@font/poppins_medium"
-                android:paddingLeft="10dp"
-                android:text="Add due date"
-                android:textColor="@color/button_color"
-                android:textSize="16sp"
-                app:switchPadding="30dp"
-                app:thumbTint="@color/button_color"
-                app:trackTint="@color/textview_color"
-                />-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +104,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:padding="10dp"
                     android:background="@android:color/transparent"
-                    android:hint="@string/task_name_hint"
+                    android:hint="Title... \n(e.g. Buy groceries)"
                     android:textAlignment="textStart"
                     android:textColor="@color/bright_white"
                     android:textColorHint="@color/hint_color"
@@ -238,57 +255,6 @@
                 android:clickable="false"/>
 
         </androidx.core.widget.NestedScrollView>
-
-        <Button
-            android:id="@+id/btnCreateTask"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="190dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:background="@drawable/view_background_add_task_button"
-            android:layout_gravity="center"
-            android:text="@string/create_task_btn_label"
-            android:textColor="@color/bright_white"
-            android:textSize="19dp"
-            android:fontFamily="@font/poppins_medium"
-            app:backgroundTint="@null" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/lytChecklist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="3dp"
-            android:layout_marginHorizontal="2dp"
-            android:layout_gravity="bottom"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="@color/grey">
-            <EditText
-                android:id="@+id/edtChecklistItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:minHeight="20dp"
-                android:layout_margin="5dp"
-                android:imeOptions="actionDone"
-                android:focusableInTouchMode="true"
-                android:fontFamily="@font/poppins_medium"
-                android:padding="10dp"
-                android:background="@android:color/transparent"
-                android:hint="Add checklist item..."
-                android:textAlignment="textStart"
-                android:textColor="@color/bright_white"
-                android:textColorHint="@color/hint_color"
-                android:textSize="15dp" />
-            <ImageView
-                android:id="@+id/imgEnterChecklist"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_enter"
-                android:layout_gravity="right|center_vertical"/>
-        </androidx.cardview.widget.CardView>
 
 
     </LinearLayout>
