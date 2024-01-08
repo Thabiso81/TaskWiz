@@ -9,6 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/layout_background_create_task">
 
+
     <LinearLayout
         android:id="@+id/lytDivider"
         android:layout_width="35dp"
