@@ -20,7 +20,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
     }
 
     interface OnTaskClickListener {
-        fun onTaskClick(task: TaskModel)
+        fun onTaskClick(task: TaskWithChecklist)
     }
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
@@ -44,6 +44,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
     override fun onBindViewHolder(holder: TaskListAdapterViewHolder, position: Int) {
         val task = differ.currentList[position].task
         val checklist = differ.currentList[position].checklist
+        val taskWithChecklist = differ.currentList[position]
 
         //displays the taskName if available
         if (!task.taskName.isNullOrEmpty()){
@@ -112,7 +113,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
 
         //handle the click listener of the the entire task
         holder.itemBinding.lytTaskDetails.setOnClickListener {
-            onTaskClickListener.onTaskClick(task)
+            onTaskClickListener.onTaskClick(taskWithChecklist)
         }
 
         //adjust viewholder views if (description == null) && (due date == null) && (checklist == null)

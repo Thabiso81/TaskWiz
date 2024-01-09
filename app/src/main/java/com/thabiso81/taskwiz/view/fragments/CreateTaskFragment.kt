@@ -181,7 +181,7 @@ class CreateTaskFragment : Fragment() {
             )
 
 
-            CoroutineScope(Dispatchers.IO).launch{
+            CoroutineScope(Dispatchers.Main).launch{
                 val taskId = taskMvvm.insertTask(newTask)
 
                 if (!checklistItems.isNullOrEmpty()){
@@ -192,8 +192,9 @@ class CreateTaskFragment : Fragment() {
                         taskMvvm.insertChecklist(newChecklist)
                     }
                 }
+
+                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
             }
-            findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
         }
 
     }
