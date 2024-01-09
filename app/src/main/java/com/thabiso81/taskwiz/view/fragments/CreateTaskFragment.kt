@@ -187,14 +187,12 @@ class CreateTaskFragment : Fragment() {
                 if (!checklistItems.isNullOrEmpty()){
                     for(checklist in checklistItems){
 
-                        val newChecklist = TaskChecklistModel(checklistItemTitle = checklist ,taskId=taskId )
+                        val newChecklist = TaskChecklistModel(checklistItemTitle = checklist ,taskId=taskId, completionStatus = defaultCompletionStatus)
 
                         taskMvvm.insertChecklist(newChecklist)
                     }
                 }
             }
-
-
             findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
         }
 

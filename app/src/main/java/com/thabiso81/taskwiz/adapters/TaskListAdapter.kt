@@ -81,9 +81,15 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
         //displays checklist info
         if (!checklist.isNullOrEmpty()){
             val totalChecklistItems = checklist.size
-            val incompleteChecklistItems = 0
+            var completeChecklistItems = 0
 
-            holder.itemBinding.tvChecklistAmount.text = "Checklist : $incompleteChecklistItems/$totalChecklistItems"
+            //count how many checklist items are complete
+            for (item in checklist){
+                if (item.completionStatus.equals("complete"))
+                    completeChecklistItems++
+            }
+
+            holder.itemBinding.tvChecklistAmount.text = "Checklist : $completeChecklistItems/$totalChecklistItems"
         }else{
             //dont show checklist info if there are no checklists
             holder.itemBinding.lytChecklists.visibility = View.GONE

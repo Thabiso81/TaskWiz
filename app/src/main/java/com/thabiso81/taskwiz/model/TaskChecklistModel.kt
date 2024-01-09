@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class TaskChecklistModel(
     @PrimaryKey(autoGenerate = true)
     val checklistItemId: Long = 0,
-    val checklistItemTitle: String,
+    var checklistItemTitle: String,
+    var completionStatus: String?,
     val taskId: Long
 )
