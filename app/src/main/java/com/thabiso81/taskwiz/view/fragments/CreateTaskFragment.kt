@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.R
-import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
+import com.thabiso81.taskwiz.adapters.ReviewChecklistAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
 import com.thabiso81.taskwiz.model.TaskChecklistModel
@@ -33,7 +33,7 @@ class CreateTaskFragment : Fragment() {
     private var _binding: FragmentCreateTaskBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var checkListAdapter: TaskChecklistAdapter
+    private lateinit var checkListAdapter: ReviewChecklistAdapter
     private var checklistItems = mutableListOf<String>()
 
     private lateinit var taskMvvm: CreateTaskViewModel
@@ -81,7 +81,7 @@ class CreateTaskFragment : Fragment() {
     }
 
     private fun prepare_RecyclerView() {
-        checkListAdapter = TaskChecklistAdapter()
+        checkListAdapter = ReviewChecklistAdapter()
         binding.rvChecklist.apply {
             setHasFixedSize(false)
             adapter = checkListAdapter
@@ -171,7 +171,7 @@ class CreateTaskFragment : Fragment() {
 
     private fun saveTask(){
 
-        if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
+        if (inputValid(binding.edtTaskName, binding.edtTaskDescription)) {
             val newTask = TaskModel(
                 taskDescription = binding.edtTaskDescription.text.toString(),
                 taskName = binding.edtTaskName.text.toString(),
@@ -233,11 +233,11 @@ class CreateTaskFragment : Fragment() {
         })
     }
 
-    fun inputValid(taskName: EditText, taskDueDate: TextView): Boolean{
+    fun inputValid(taskName: EditText, taskDescription: EditText): Boolean{
         var isValid = true
-        if (taskName.text.toString().isEmpty()){
+        if (taskName.text.toString().isEmpty() && taskDescription.text.toString().isEmpty() ){
             isValid = false
-            Toast.makeText(requireContext(), "Enter a task title", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Oops! forgot to fill in the task title or task description.", Toast.LENGTH_LONG).show()
         }
         return isValid
     }

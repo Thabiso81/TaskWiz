@@ -5,27 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.CheckBox
-import android.widget.CompoundButton.OnCheckedChangeListener
-import androidx.core.view.marginBottom
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.checkbox.MaterialCheckBox.OnCheckedStateChangedListener
-import com.google.android.material.snackbar.Snackbar
 import com.thabiso81.taskwiz.R
-import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskModel
-import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
-import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import java.time.LocalDate
 
-class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener, private val onTaskClickListener: OnTaskClickListener) : RecyclerView.Adapter<TaskListAdapter.TaskListAdapterViewHolder>() {
+class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListener, private val onTaskClickListener: OnTaskClickListener) : RecyclerView.Adapter<DisplayTaskListAdapter.TaskListAdapterViewHolder>() {
     interface OnCheckboxClickListener {
         fun onCheckboxClick(task: TaskModel, view: CheckBox)
     }
@@ -55,15 +44,20 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
     override fun onBindViewHolder(holder: TaskListAdapterViewHolder, position: Int) {
         val task = differ.currentList[position].task
         val checklist = differ.currentList[position].checklist
-        holder.itemBinding.tvTaskName.text = task.taskName
+
+        //displays the taskName if available
+        if (!task.taskName.isNullOrEmpty()){
+            holder.itemBinding.tvTaskName.text = task.taskName
+        }
 
         //displays the description
         if (!task.taskDescription.isNullOrEmpty()){
-            if (task.taskDescription.length >= 100){
-                //limit amount of characters shown
-                holder.itemBinding.tvTaskDescription.text = "${task.taskDescription.substring(0, 101)}..."
-            }else{
+            //if (taskName == null) display description in the taskName view
+            if (!task.taskName.isNullOrEmpty()){
                 holder.itemBinding.tvTaskDescription.text = task.taskDescription
+            }else{
+                holder.itemBinding.tvTaskName.text = task.taskDescription
+                holder.itemBinding.tvTaskDescription.visibility = View.GONE
             }
         }else{
             //dont show description view if there is no description
@@ -125,6 +119,11 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
         if(task.taskDescription.isNullOrEmpty() &&
             task.taskDueDate == LocalDate.ofEpochDay(0) &&
             checklist.isNullOrEmpty()){
+            holder.itemBinding.divider.visibility = View.GONE
+        }
+
+        //adjust viewholder views if (Title == null)
+        if(task.taskName.isNullOrEmpty()){
             holder.itemBinding.divider.visibility = View.GONE
         }
 

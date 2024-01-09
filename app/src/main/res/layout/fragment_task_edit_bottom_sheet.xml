@@ -201,7 +201,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/checklist_view_holder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="paent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lytDivider2"
         app:layout_constraintBottom_toBottomOf="parent"/>-->
 

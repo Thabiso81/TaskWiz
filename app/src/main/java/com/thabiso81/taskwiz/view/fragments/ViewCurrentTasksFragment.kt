@@ -1,10 +1,7 @@
 package com.thabiso81.taskwiz.view.fragments
 
-import android.R
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,19 +13,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.thabiso81.taskwiz.adapters.TaskListAdapter
-import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.adapters.DisplayTaskListAdapter
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.view.activities.MainActivity
 import com.thabiso81.taskwiz.view.fragments.bottomSheet.TaskEditBottomSheetFragment
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
-import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,13 +32,13 @@ import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
-class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener, TaskListAdapter.OnTaskClickListener {
+class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxClickListener, DisplayTaskListAdapter.OnTaskClickListener {
     private var _binding: FragmentViewCurrentTasksBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var  viewModel: ViewTasksViewModel
 
-    private lateinit var taskListAdapter: TaskListAdapter
+    private lateinit var displayTaskListAdapter: DisplayTaskListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,9 +85,9 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
     }
 
     private fun prepareReyclerView() {
-        taskListAdapter = TaskListAdapter(this, this)
+        displayTaskListAdapter = DisplayTaskListAdapter(this, this)
         binding.rvTasks.apply {
-            adapter = taskListAdapter
+            adapter = displayTaskListAdapter
 
         }
 
@@ -121,7 +115,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
                 binding.edtRemainingTasks.text = "$completeTasks/$totalTasks complete"
 
-                taskListAdapter.differ.submitList(tasks.toMutableList())
+                displayTaskListAdapter.differ.submitList(tasks.toMutableList())
             }
         })
 
@@ -142,8 +136,8 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition //get the position of viewHolder item being swiped
-                val task = taskListAdapter.differ.currentList[position].task
-                viewModel.deleteTask(taskListAdapter.differ.currentList[position].task)
+                val task = displayTaskListAdapter.differ.currentList[position].task
+                viewModel.deleteTask(displayTaskListAdapter.differ.currentList[position].task)
 
                 Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG).setAction(
                     "undo",
@@ -157,7 +151,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                                 viewModel.insertTask(task)
                             }
 
-                            if (position == 0) taskListAdapter.notifyDataSetChanged()
+                            if (position == 0) displayTaskListAdapter.notifyDataSetChanged()
 
                     }
                 ).show()

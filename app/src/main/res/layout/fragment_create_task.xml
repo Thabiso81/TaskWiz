@@ -145,7 +145,7 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/poppins_medium"
                     android:padding="10dp"
-                    android:hint="Notes..."
+                    android:hint="Description..."
                     android:textColor="@color/bright_white"
                     android:textColorHint="@color/hint_color"
                     android:textSize="13dp" />
