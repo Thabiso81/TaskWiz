@@ -107,8 +107,19 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
             if (tasks.isNullOrEmpty()){
                 onNoTasksAvailable()
+                binding.edtRemainingTasks.text = "All done"
             }else{
                 onTasksAvailable()
+                //display incompleteTasks/totalTasks
+                val totalTasks = tasks.size
+                var completeTasks = 0
+
+                for(task in tasks){
+                    if(task.task.completionStatus.equals("complete"))
+                        completeTasks++
+                }
+
+                binding.edtRemainingTasks.text = "$completeTasks/$totalTasks complete"
 
                 taskListAdapter.differ.submitList(tasks.toMutableList())
             }
@@ -232,9 +243,9 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
 
     private fun onTasksAvailable() {
+        binding.lytNoTasks.visibility = View.GONE
         binding.rvTasks.visibility = View.VISIBLE
         binding.lottiAnimation.pauseAnimation()
-        binding.lytNoTasks.visibility = View.GONE
     }
     private fun onBackButtonPressed(){
         //handle back button being pressed
