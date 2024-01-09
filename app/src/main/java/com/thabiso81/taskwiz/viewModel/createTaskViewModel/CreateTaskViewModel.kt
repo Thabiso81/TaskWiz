@@ -26,7 +26,7 @@ class CreateTaskViewModel(
         }
     }
 
-    fun insertChecklist(task: TaskModel, checklist: TaskChecklistModel){
+    fun insertChecklist(checklist: TaskChecklistModel){
         viewModelScope.launch {
             taskDatabase.taskDao().upsertChecklist(checklist)
         }

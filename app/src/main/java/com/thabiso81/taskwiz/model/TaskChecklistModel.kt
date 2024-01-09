@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity (tableName = "userCheckLists")
 data class TaskChecklistModel(
     @PrimaryKey(autoGenerate = true)
-    val checklistItemId: Int = 0,
+    val checklistItemId: Long = 0,
     val checklistItemTitle: String,
-    val taskId: Int
+    val taskId: Long
 )

@@ -79,45 +79,92 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="4dp"
                     app:dividerColor="@color/recycler_view_grey2"/>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/lytDueDate"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    app:cardBackgroundColor="@color/recycler_view_grey3"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp">
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/lytDueDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="5dp"
-                        android:paddingVertical="2dp">
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="5dp"
+                        app:cardBackgroundColor="@color/recycler_view_grey3"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
 
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginEnd="5dp"
-                            android:src="@drawable/ic_alarm" />
-
-                        <TextView
-                            android:id="@+id/tv_task_due_date"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/cabin_italic"
-                            android:inputType="textCapWords"
-                            android:text="Due date"
-                            android:textColor="@color/hint_color"
-                            android:textSize="13dp"
-                            android:textStyle="italic" />
+                            android:layout_gravity="bottom"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="5dp"
+                            android:paddingVertical="2dp">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginEnd="5dp"
+                                android:src="@drawable/ic_alarm" />
 
-                </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:id="@+id/tv_task_due_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/cabin_italic"
+                                android:inputType="textCapWords"
+                                android:text="Due date"
+                                android:textColor="@color/hint_color"
+                                android:textSize="13dp"
+                                android:textStyle="italic" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/lytChecklists"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        app:cardBackgroundColor="@color/recycler_view_grey3"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="5dp"
+                            android:paddingVertical="2dp">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginEnd="5dp"
+                                app:tint="@color/hint_color"
+                                android:src="@drawable/ic_checklist" />
+
+                            <TextView
+                                android:id="@+id/tvChecklistAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/cabin_italic"
+                                android:inputType="textCapWords"
+                                android:text="Checklist : 0/2"
+                                android:textColor="@color/hint_color"
+                                android:textSize="13dp"
+                                android:textStyle="italic" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

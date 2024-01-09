@@ -19,6 +19,7 @@ import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
@@ -163,28 +164,41 @@ class CreateTaskFragment : Fragment() {
     private fun btnCreateTask_OnClickListener() {
         binding.btnCreateTask.setOnClickListener() {
 
-
-            if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
-                val newTask = TaskModel(
-                    taskDescription = binding.edtTaskDescription.text.toString(),
-                    taskName = binding.edtTaskName.text.toString(),
-                    taskDueDate = taskCompletionDate,
-                    completionStatus = defaultCompletionStatus,
-                    taskCreationDate = LocalDate.now(),
-                )
-
-
-                CoroutineScope(Dispatchers.IO).launch{
-                    taskMvvm.insertTask(newTask)
-                }
-
-
-                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
-            }
-
+            saveTask()
         }
     }
     /********************** Listeners end **********************/
+
+    private fun saveTask(){
+
+        if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
+            val newTask = TaskModel(
+                taskDescription = binding.edtTaskDescription.text.toString(),
+                taskName = binding.edtTaskName.text.toString(),
+                taskDueDate = taskCompletionDate,
+                completionStatus = defaultCompletionStatus,
+                taskCreationDate = LocalDate.now(),
+            )
+
+
+            CoroutineScope(Dispatchers.IO).launch{
+                val taskId = taskMvvm.insertTask(newTask)
+
+                if (!checklistItems.isNullOrEmpty()){
+                    for(checklist in checklistItems){
+
+                        val newChecklist = TaskChecklistModel(checklistItemTitle = checklist ,taskId=taskId )
+
+                        taskMvvm.insertChecklist(newChecklist)
+                    }
+                }
+            }
+
+
+            findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
+        }
+
+    }
 
     private fun add_Checklist_Item() {
         prepare_RecyclerView()

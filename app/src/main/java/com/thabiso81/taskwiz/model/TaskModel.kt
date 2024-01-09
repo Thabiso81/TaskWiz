@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Entity(tableName = "userTasks")
 data class TaskModel(
     @PrimaryKey(autoGenerate = true)
-    val taskId: Int = 0,
+    val taskId: Long = 0,
     val taskName : String?,
     var completionStatus: String?,
     val taskDescription: String?,

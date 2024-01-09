@@ -57,7 +57,7 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
         val checklist = differ.currentList[position].checklist
         holder.itemBinding.tvTaskName.text = task.taskName
 
-        //adjust the view that displays the description
+        //displays the description
         if (!task.taskDescription.isNullOrEmpty()){
             if (task.taskDescription.length >= 100){
                 //limit amount of characters shown
@@ -70,12 +70,23 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             holder.itemBinding.tvTaskDescription.visibility = View.GONE
         }
 
-        //adjust the view that displays the date
+        //displays due date
         if (task.taskDueDate != LocalDate.ofEpochDay(0)){
             holder.itemBinding.tvTaskDueDate.text = "Due on ${task.taskDueDate!!.dayOfMonth} ${task.taskDueDate!!.month}"
         }else{
             //dont show due date if there is none
             holder.itemBinding.lytDueDate.visibility = View.GONE
+        }
+
+        //displays checklist info
+        if (!checklist.isNullOrEmpty()){
+            val totalChecklistItems = checklist.size
+            val incompleteChecklistItems = 0
+
+            holder.itemBinding.tvChecklistAmount.text = "Checklist : $incompleteChecklistItems/$totalChecklistItems"
+        }else{
+            //dont show checklist info if there are no checklists
+            holder.itemBinding.lytChecklists.visibility = View.GONE
         }
 
         //adjust margin on the last viewholder item
@@ -104,8 +115,10 @@ class TaskListAdapter(private val onCheckboxClickListener: OnCheckboxClickListen
             onTaskClickListener.onTaskClick(task)
         }
 
-        //adjust viewholder views if (description == null) && (due date == null)
-        if(task.taskDescription.isNullOrEmpty() && task.taskDueDate == LocalDate.ofEpochDay(0)){
+        //adjust viewholder views if (description == null) && (due date == null) && (checklist == null)
+        if(task.taskDescription.isNullOrEmpty() &&
+            task.taskDueDate == LocalDate.ofEpochDay(0) &&
+            checklist.isNullOrEmpty()){
             holder.itemBinding.divider.visibility = View.GONE
         }
 
