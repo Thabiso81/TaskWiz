@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import java.time.LocalDate
 
@@ -20,7 +21,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
     }
 
     interface OnTaskClickListener {
-        fun onTaskClick(task: TaskWithChecklist)
+        fun onTaskClick(task: TaskModel, checklist: List<TaskChecklistModel>)
     }
     inner class TaskListAdapterViewHolder(val itemBinding: TaskViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
@@ -113,7 +114,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
 
         //handle the click listener of the the entire task
         holder.itemBinding.lytTaskDetails.setOnClickListener {
-            onTaskClickListener.onTaskClick(taskWithChecklist)
+            onTaskClickListener.onTaskClick(task, checklist)
         }
 
         //adjust viewholder views if (description == null) && (due date == null) && (checklist == null)

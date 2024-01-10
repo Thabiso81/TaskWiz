@@ -22,6 +22,7 @@ import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.adapters.DisplayTaskListAdapter
 import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.view.activities.MainActivity
 import com.thabiso81.taskwiz.view.fragments.bottomSheet.TaskEditBottomSheetFragment
@@ -300,16 +301,10 @@ class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxCl
     }
 
     //callback for when task is clicked on recyclerview
-    override fun onTaskClick(task: TaskWithChecklist) {
+    override fun onTaskClick(task: TaskModel, checklist: List<TaskChecklistModel>) {
         //instantiate bottom sheet Fragment and pass the taskId as an argument
-        val taskEditBottomSheetFragment = TaskEditBottomSheetFragment.newInstance(
-            task.task.taskId.toString(),
-            task.task.taskName.toString(),
-            task.task.taskDescription.toString(),
-            task.task.taskDueDate.toString(),
 
-            )
-        taskEditBottomSheetFragment.show(childFragmentManager, "Task Details")
+
     }
 
 }

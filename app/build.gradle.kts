@@ -3,7 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+
+    //Safe args for navivation of data between fragments
     id("androidx.navigation.safeargs.kotlin")
+
+    //Parcelize for auto generation of Parcelable
+    id("kotlin-parcelize")
 }
 
 android {

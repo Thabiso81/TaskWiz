@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 
-@Database(entities = [TaskModel::class, TaskChecklistModel::class], version = 8)
+@Database(entities = [TaskModel::class, TaskChecklistModel::class], version = 9)
 @TypeConverters(TaskTypeConverter::class)
 abstract class TaskDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDao
