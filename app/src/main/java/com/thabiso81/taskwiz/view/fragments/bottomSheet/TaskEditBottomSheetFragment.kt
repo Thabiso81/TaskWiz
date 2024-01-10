@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.FragmentTaskEditBottomSheetBinding
 import com.thabiso81.taskwiz.view.activities.MainActivity
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
@@ -56,7 +57,12 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
             _taskId: String,
             _taskName: String,
             _taskDescription: String,
-            _taskCompletionDate: String) =
+            _taskCompletionDate: String,
+            /*_taskCompletionStatus: String,
+            _taskCreationDate: String,
+            taskWithChecklist: TaskWithChecklist,*/
+
+            ) =
 
                 TaskEditBottomSheetFragment().apply {
                     arguments = Bundle().apply {
@@ -64,6 +70,7 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
                         putString(ARG_TASK_NAME, _taskName)
                         putString(ARG_TASK_DESCRIPTION, _taskDescription)
                         putString(ARG_TASK_COMPLETION_DATE, _taskCompletionDate)
+
                     }
                 }
     }

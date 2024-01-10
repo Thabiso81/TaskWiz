@@ -140,7 +140,7 @@ class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxCl
             ) = true //use this if you want something to happen when we scroll in recyclerview
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition //get the position of viewHolder item being swiped
+                val position = viewHolder.bindingAdapterPosition //get the position of viewHolder item being swiped
                 val task = displayTaskListAdapter.differ.currentList[position].task
                 viewModel.deleteTask(displayTaskListAdapter.differ.currentList[position].task)
 
@@ -306,7 +306,9 @@ class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxCl
             task.task.taskId.toString(),
             task.task.taskName.toString(),
             task.task.taskDescription.toString(),
-            task.task.taskDueDate.toString())
+            task.task.taskDueDate.toString(),
+
+            )
         taskEditBottomSheetFragment.show(childFragmentManager, "Task Details")
     }
 

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -67,7 +68,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     //Navigation components
-    val nav_version = "2.7.5"
+    val nav_version = "2.7.6"
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 

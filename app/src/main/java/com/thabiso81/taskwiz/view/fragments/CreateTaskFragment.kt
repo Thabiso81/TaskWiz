@@ -39,7 +39,7 @@ class CreateTaskFragment : Fragment() {
     private lateinit var taskMvvm: CreateTaskViewModel
     private val defaultCompletionStatus = "Incomplete"
 
-    private var taskCompletionDate: LocalDate? = null
+    private var taskCompletionDate: Long? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -122,14 +122,14 @@ class CreateTaskFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener {
 
                 //convert unix epoch value from milliseconds to days
-                taskCompletionDate = LocalDate.ofEpochDay(it / (24 * 60 * 60 * 1000))
+                taskCompletionDate = it / (24 * 60 * 60 * 1000)
                 binding.edtCompletionDate.setText(
-                    "${taskCompletionDate!!.dayOfMonth} " +
-                            "${taskCompletionDate!!.month} " +
-                            "${if (LocalDate.now().year == taskCompletionDate!!.year) "" else taskCompletionDate!!.year}"
+                    "${LocalDate.ofEpochDay(taskCompletionDate!!).dayOfMonth} " +
+                            "${LocalDate.ofEpochDay(taskCompletionDate!!).month} " +
+                            "${if (LocalDate.now().year == LocalDate.ofEpochDay(taskCompletionDate!!).year) "" else LocalDate.ofEpochDay(taskCompletionDate!!).year}"
                 )
 
-                if (taskCompletionDate!!.isBefore(LocalDate.now())){
+                if (LocalDate.ofEpochDay(taskCompletionDate!!).isBefore(LocalDate.now())){
                     binding.edtCompletionDate.text=""
                     Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
                 }
@@ -177,7 +177,7 @@ class CreateTaskFragment : Fragment() {
                 taskName = binding.edtTaskName.text.toString(),
                 taskDueDate = taskCompletionDate,
                 completionStatus = defaultCompletionStatus,
-                taskCreationDate = LocalDate.now(),
+                taskCreationDate = LocalDate.now().toEpochDay(),
             )
 
 
