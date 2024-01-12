@@ -304,7 +304,10 @@ class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxCl
     override fun onTaskClick(task: TaskModel, checklist: List<TaskChecklistModel>) {
         //instantiate bottom sheet Fragment and pass the taskId as an argument
 
-
+        findNavController().navigate(ViewCurrentTasksFragmentDirections.
+        actionViewCurrentTasksFragmentToTaskEditBottomSheetFragment(
+            task,
+            checklist.toTypedArray()))
     }
 
 }

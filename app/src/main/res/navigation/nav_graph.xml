@@ -39,5 +39,13 @@
         <action
             android:id="@+id/action_taskEditBottomSheetFragment_to_viewCurrentTasksFragment"
             app:destination="@id/viewCurrentTasksFragment" />
+        <argument
+            android:name="task"
+            app:argType="com.thabiso81.taskwiz.model.TaskModel" />
+        <argument
+            android:name="checklist"
+            app:argType="com.thabiso81.taskwiz.model.TaskChecklistModel[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
 </navigation>

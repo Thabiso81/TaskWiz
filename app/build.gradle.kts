@@ -83,4 +83,7 @@ dependencies {
     //Recyclerview onswipe gestures
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
+    //cirle image view
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
 }
