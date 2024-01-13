@@ -14,8 +14,11 @@ import kotlin.coroutines.resume
 
 class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
     /**** states that hold the data that will be presented to user ***/
+    private var taskId: Long? = 0
+
     private var allTasksLiveData = taskDatabase.taskDao().getAllTasks()
     private var incompleteTasksLiveData = taskDatabase.taskDao().getAllIncompleteTasksWithChecklists()
+    private var checklistLiveData = taskDatabase.taskDao().getCheckListById(taskId!!)
 
 
     /****** logic that gets the data from api or database *****/
@@ -48,7 +51,11 @@ class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
         }
     }
 
-    fun insertChecklist(task: TaskModel, checklist: TaskChecklistModel){
+    fun getChecklistById(_taskId: Long){
+        checklistLiveData = taskDatabase.taskDao().getCheckListById(_taskId)
+    }
+
+    fun insertChecklist(checklist: TaskChecklistModel){
         viewModelScope.launch {
             taskDatabase.taskDao().upsertChecklist(checklist)
         }
@@ -67,6 +74,10 @@ class ViewTasksViewModel(val taskDatabase: TaskDatabase): ViewModel() {
 
     }
 
+    fun observeTaskChecklistLiveData(_taskId: Long): LiveData<List<TaskChecklistModel>> {
+        taskId = _taskId
+        return checklistLiveData
 
+    }
 
 }

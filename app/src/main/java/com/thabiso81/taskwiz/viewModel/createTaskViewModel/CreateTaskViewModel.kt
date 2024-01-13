@@ -1,8 +1,10 @@
 package com.thabiso81.taskwiz.viewModel.createTaskViewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import kotlinx.coroutines.launch
@@ -12,6 +14,8 @@ import kotlin.coroutines.resume
 class CreateTaskViewModel(
     val taskDatabase: TaskDatabase
 ): ViewModel() {
+    //private var checklistLiveData = taskDatabase.taskDao().getCheckListById()
+
     fun insertTaskOnly(task: TaskModel){
         viewModelScope.launch {
             taskDatabase.taskDao().upsertTask(task)
@@ -31,4 +35,9 @@ class CreateTaskViewModel(
             taskDatabase.taskDao().upsertChecklist(checklist)
         }
     }
+
+    /*fun observeGetChecklistLiveData(): LiveData<List<TaskChecklistModel>> {
+        return checklistLiveData
+
+    }*/
 }
