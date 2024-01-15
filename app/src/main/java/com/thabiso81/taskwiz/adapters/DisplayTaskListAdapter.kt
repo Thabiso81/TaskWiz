@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thabiso81.taskwiz.R
 import com.thabiso81.taskwiz.database.relations.TaskWithChecklist
 import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
+import com.thabiso81.taskwiz.globalMethods.GlobalMethods
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import java.time.LocalDate
@@ -68,7 +69,9 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
 
         //displays due date
         if (task.taskDueDate != null){
-            holder.itemBinding.tvTaskDueDate.text = "Due on ${LocalDate.ofEpochDay(task.taskDueDate!!).dayOfMonth} ${LocalDate.ofEpochDay(task.taskDueDate!!).month}"
+            //holder.itemBinding.tvTaskDueDate.text = "Due on ${LocalDate.ofEpochDay(task.taskDueDate!!).dayOfMonth} ${LocalDate.ofEpochDay(task.taskDueDate!!).month}"
+            holder.itemBinding.tvTaskDueDate.text = "${GlobalMethods().getDate(task.taskDueDate!!)}"
+
         }else{
             //dont show due date if there is none
             holder.itemBinding.lytDueDate.visibility = View.GONE

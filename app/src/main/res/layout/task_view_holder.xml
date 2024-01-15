@@ -23,11 +23,12 @@
 
         <CheckBox
             android:id="@+id/cbxCompleted"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginVertical="12dp"
             android:checked="false"
             android:button="@drawable/view_custom_checkbox"
             app:buttonTint="@color/task_checkbox_color"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
             android:scaleX="1"
             android:scaleY="1"/>
 
@@ -115,6 +116,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/cabin_italic"
                                 android:layout_marginBottom="2dp"
+                                android:paddingEnd="5dp"
                                 android:inputType="textCapWords"
                                 android:text="Due date"
                                 android:textColor="@color/hint_color"

@@ -1,9 +1,12 @@
 package com.thabiso81.taskwiz.view.fragments.bottomSheet
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -13,20 +16,37 @@ import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.view.activities.MainActivity
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
+
+interface OnTaskSaved {
+    fun onTaskSaved(isSaved: Boolean)
+}
+
+
 class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
+    private var callbackListener: OnTaskSaved? = null
+
     private var _binding: FragmentTaskEditBottomSheetBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var task: TaskModel
     private var checklist: Array<TaskChecklistModel>? = null
+    private var newChecklist: MutableList<TaskChecklistModel>? = null
     private val navigationArgs: TaskEditBottomSheetFragmentArgs by navArgs()
+
+    private val defaultCompletionStatus = "Incomplete"
+    private var taskCompletionDate: Long? = null
 
     private lateinit var checklistAdapter: DisplayChecklistAdapter
 
     private lateinit var viewModel: ViewTasksViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,8 +73,14 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
         populateUI()
 
+        imgEditOnClick()
+
+        cancelEditOnClick()
+
         return view
     }
+
+
 
     private fun populateUI() {
         //title and description logic
@@ -86,15 +112,19 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         //checklist logic
-        if (checklist.isNullOrEmpty()){
+        if (!checklist.isNullOrEmpty()){
 
-            onChecklistUnavailable()
+            //onChecklistUnavailable()
+            onChecklistAvailable()
 
-        }else{
+            binding.imgAddMoreChecklistItems.visibility = View.GONE
+
+        }
+        /*else{
 
             onChecklistAvailable()
 
-        }
+        }*/
     }
 
     private fun onChecklistUnavailable() {
@@ -117,6 +147,130 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun imgEditOnClick() {
+
+        binding.imgEdit.setOnClickListener {
+            //setup ui
+            editTaskMode()
+
+
+        }
+
+        binding.btnDone.setOnClickListener {
+            saveTask()
+
+            /*if (saveTask()){
+                //task = new task that was saved
+                //viewTaskMode()
+
+                //populateUI()
+
+                //dismiss()
+            }*/
+            //saveTask()
+
+
+        }
+    }
+
+    private fun cancelEditOnClick() {
+        binding.btnCancelEdit.setOnClickListener {
+            viewTaskMode()
+
+            populateUI()
+        }
+    }
+
+    private fun saveTask() {
+        var taskSaved = false
+
+        if (inputValid(binding.edtTaskName, binding.edtTaskDescription)){
+            //if no changes were after btndone is clicked, then do nothing or call viewTaskMode
+
+            //save task
+            val newTask = TaskModel(
+                taskId = task.taskId,
+                taskDescription = binding.edtTaskDescription.text.toString(),
+                taskName = binding.edtTaskName.text.toString(),
+                taskDueDate = taskCompletionDate,
+                completionStatus = defaultCompletionStatus,
+                taskCreationDate = LocalDate.now().toEpochDay(),
+            )
+            CoroutineScope(Dispatchers.Main).launch {
+                val taskId = viewModel.insertTask(newTask)
+
+                if (taskId != null){
+                    taskSaved = true
+                }
+
+                if (!newChecklist.isNullOrEmpty()) {
+                    for (checklist in newChecklist!!) {
+
+                        val newChecklist = TaskChecklistModel(
+                            checklistItemTitle = checklist.checklistItemTitle,
+                            taskId = taskId,
+                            completionStatus = defaultCompletionStatus
+                        )
+
+                        viewModel.insertChecklist(newChecklist)
+
+
+
+                    }
+                }
+
+                //if keyboard is showing then dismiss it first
+
+                dismiss()
+
+            }
+        }
+
+
+    }
+
+    private fun editTaskMode(){
+        binding.btnCancelEdit.visibility = View.VISIBLE
+        binding.btnDone.visibility = View.VISIBLE
+        binding.divider2.visibility = View.VISIBLE
+        binding.imgAddMoreChecklistItems.visibility = View.VISIBLE
+
+
+        binding.imgEdit.visibility = View.GONE
+        binding.btnTaskComplete.visibility = View.GONE
+
+        //description
+        binding.edtTaskDescription.visibility = View.VISIBLE
+        binding.edtTaskDescription.isEnabled = true
+
+        //completion date
+        binding.cdvCompletionDate.visibility = View.VISIBLE
+        binding.edtTaskName.isEnabled = true
+
+        //checklist logic
+        if (checklist.isNullOrEmpty()){
+
+            onChecklistUnavailable()
+
+        }else{
+
+            onChecklistAvailable()
+
+        }
+    }
+
+    private fun viewTaskMode(){
+        binding.btnCancelEdit.visibility = View.GONE
+        binding.btnDone.visibility = View.GONE
+        binding.imgAddMoreChecklistItems.visibility = View.GONE
+
+        binding.imgEdit.visibility = View.VISIBLE
+        binding.btnTaskComplete.visibility = View.VISIBLE
+
+        binding.edtTaskDescription.isEnabled = false
+        binding.edtTaskName.isEnabled = false
+
+    }
     private fun observerChecklist() {
 
         viewModel.observeTaskChecklistLiveData(task.taskId).observe(viewLifecycleOwner, Observer { checklist ->
@@ -126,11 +280,26 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
                 checklistAdapter.differ.submitList(checklist.toMutableList())
 
-            }else{
-                onChecklistUnavailable()
             }
+            /*else{
+                onChecklistUnavailable()
+            }*/
         })
 
     }
+
+    fun inputValid(taskName: EditText, taskDescription: EditText): Boolean{
+        var isValid = true
+        if (taskName.text.toString().isEmpty() && taskDescription.text.toString().isEmpty() ){
+            isValid = false
+            Toast.makeText(requireContext(), "Oops! forgot to fill in the task title or task description.", Toast.LENGTH_LONG).show()
+        }
+        return isValid
+    }
+
+    fun setOnTaskSavedListener(listener: OnTaskSaved) {
+        callbackListener = listener
+    }
+
 
 }

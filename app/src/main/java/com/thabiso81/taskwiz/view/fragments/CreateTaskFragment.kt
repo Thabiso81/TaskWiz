@@ -21,6 +21,7 @@ import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
+import com.thabiso81.taskwiz.view.fragments.bottomSheet.OnTaskSaved
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +30,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
-class CreateTaskFragment : Fragment() {
+class CreateTaskFragment : Fragment(), OnTaskSaved {
     private var _binding: FragmentCreateTaskBinding? = null
     private val binding get() = _binding!!
 
@@ -241,6 +242,10 @@ class CreateTaskFragment : Fragment() {
             Toast.makeText(requireContext(), "Oops! forgot to fill in the task title or task description.", Toast.LENGTH_LONG).show()
         }
         return isValid
+    }
+
+    override fun onTaskSaved(isSaved: Boolean) {
+        val taskSaved = isSaved
     }
 
 }
