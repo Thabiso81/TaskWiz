@@ -68,7 +68,7 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
         }
 
         //displays due date
-        if (task.taskDueDate != null){
+        if (task.taskDueDate != null || (task.taskDueDate?:0).toInt() != 0){
             //holder.itemBinding.tvTaskDueDate.text = "Due on ${LocalDate.ofEpochDay(task.taskDueDate!!).dayOfMonth} ${LocalDate.ofEpochDay(task.taskDueDate!!).month}"
             holder.itemBinding.tvTaskDueDate.text = "${GlobalMethods().getDate(task.taskDueDate!!)}"
 

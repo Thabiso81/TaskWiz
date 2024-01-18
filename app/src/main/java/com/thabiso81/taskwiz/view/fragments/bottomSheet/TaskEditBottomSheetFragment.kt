@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.adapters.DisplayChecklistAdapter
 import com.thabiso81.taskwiz.databinding.FragmentTaskEditBottomSheetBinding
 import com.thabiso81.taskwiz.model.TaskChecklistModel
@@ -76,6 +77,8 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         imgEditOnClick()
 
         cancelEditOnClick()
+
+        edtCompletionDate_OnClickListener()
 
         return view
     }
@@ -181,6 +184,35 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun edtCompletionDate_OnClickListener() {
+        binding.edtCompletionDate.setOnClickListener {
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build()
+
+            datePicker.show(childFragmentManager, "datePicker")
+            datePicker.addOnPositiveButtonClickListener {
+
+                //convert unix epoch value from milliseconds to days
+                taskCompletionDate = it / (24 * 60 * 60 * 1000)
+                binding.edtCompletionDate.setText(
+                    "${LocalDate.ofEpochDay(taskCompletionDate!!).dayOfMonth} " +
+                            "${LocalDate.ofEpochDay(taskCompletionDate!!).month} " +
+                            "${if (LocalDate.now().year == LocalDate.ofEpochDay(taskCompletionDate!!).year) "" else LocalDate.ofEpochDay(taskCompletionDate!!).year}"
+                )
+
+                if (LocalDate.ofEpochDay(taskCompletionDate!!).isBefore(LocalDate.now())){
+                    binding.edtCompletionDate.text=""
+                    Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
+                }
+
+            }
+        }
+    }
+
+
     private fun saveTask() {
         var taskSaved = false
 
@@ -192,7 +224,7 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
                 taskId = task.taskId,
                 taskDescription = binding.edtTaskDescription.text.toString(),
                 taskName = binding.edtTaskName.text.toString(),
-                taskDueDate = taskCompletionDate,
+                taskDueDate = taskCompletionDate?: task.taskDueDate,
                 completionStatus = defaultCompletionStatus,
                 taskCreationDate = LocalDate.now().toEpochDay(),
             )
@@ -234,6 +266,7 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         binding.btnDone.visibility = View.VISIBLE
         binding.divider2.visibility = View.VISIBLE
         binding.imgAddMoreChecklistItems.visibility = View.VISIBLE
+        binding.imgDeleteDueDate.visibility = View.VISIBLE
 
 
         binding.imgEdit.visibility = View.GONE
@@ -245,7 +278,10 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
         //completion date
         binding.cdvCompletionDate.visibility = View.VISIBLE
-        binding.edtTaskName.isEnabled = true
+        binding.edtCompletionDate.isEnabled = true
+
+        //Completion
+        binding.edtCompletionDate.isClickable = true
 
         //checklist logic
         if (checklist.isNullOrEmpty()){
@@ -263,12 +299,19 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         binding.btnCancelEdit.visibility = View.GONE
         binding.btnDone.visibility = View.GONE
         binding.imgAddMoreChecklistItems.visibility = View.GONE
+        binding.imgDeleteDueDate.visibility = View.GONE
+
 
         binding.imgEdit.visibility = View.VISIBLE
         binding.btnTaskComplete.visibility = View.VISIBLE
 
         binding.edtTaskDescription.isEnabled = false
         binding.edtTaskName.isEnabled = false
+
+        binding.edtCompletionDate.isClickable = false
+        binding.edtCompletionDate.isEnabled = false
+
+
 
     }
     private fun observerChecklist() {
