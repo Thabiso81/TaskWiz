@@ -72,6 +72,9 @@ class DisplayTaskListAdapter(private val onCheckboxClickListener: OnCheckboxClic
             //holder.itemBinding.tvTaskDueDate.text = "Due on ${LocalDate.ofEpochDay(task.taskDueDate!!).dayOfMonth} ${LocalDate.ofEpochDay(task.taskDueDate!!).month}"
             holder.itemBinding.tvTaskDueDate.text = "${GlobalMethods().getDate(task.taskDueDate!!)}"
 
+            if (LocalDate.ofEpochDay(task.taskDueDate).isBefore(LocalDate.now())){
+                holder.itemBinding.lytOverdue.visibility = View.VISIBLE
+            }
         }else{
             //dont show due date if there is none
             holder.itemBinding.lytDueDate.visibility = View.GONE

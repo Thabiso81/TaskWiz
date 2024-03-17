@@ -78,11 +78,19 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
         cancelEditOnClick()
 
+        deleteDueDateOnClick()
+
         edtCompletionDate_OnClickListener()
 
         return view
     }
 
+    private fun deleteDueDateOnClick() {
+        binding.imgDeleteDueDate.setOnClickListener {
+            binding.edtCompletionDate.setText("")
+            taskCompletionDate = null
+        }
+    }
 
 
     private fun populateUI() {
@@ -197,10 +205,10 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
                 //convert unix epoch value from milliseconds to days
                 taskCompletionDate = it / (24 * 60 * 60 * 1000)
-                binding.edtCompletionDate.setText(
+                binding.edtCompletionDate.setText("Due on " +
                     "${LocalDate.ofEpochDay(taskCompletionDate!!).dayOfMonth} " +
-                            "${LocalDate.ofEpochDay(taskCompletionDate!!).month} " +
-                            "${if (LocalDate.now().year == LocalDate.ofEpochDay(taskCompletionDate!!).year) "" else LocalDate.ofEpochDay(taskCompletionDate!!).year}"
+                    "${LocalDate.ofEpochDay(taskCompletionDate!!).month} " +
+                    "${if (LocalDate.now().year == LocalDate.ofEpochDay(taskCompletionDate!!).year) "" else LocalDate.ofEpochDay(taskCompletionDate!!).year}"
                 )
 
                 if (LocalDate.ofEpochDay(taskCompletionDate!!).isBefore(LocalDate.now())){
@@ -224,7 +232,7 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
                 taskId = task.taskId,
                 taskDescription = binding.edtTaskDescription.text.toString(),
                 taskName = binding.edtTaskName.text.toString(),
-                taskDueDate = taskCompletionDate?: task.taskDueDate,
+                taskDueDate = taskCompletionDate, //?: task.taskDueDate,
                 completionStatus = defaultCompletionStatus,
                 taskCreationDate = LocalDate.now().toEpochDay(),
             )
@@ -272,6 +280,9 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         binding.imgEdit.visibility = View.GONE
         binding.btnTaskComplete.visibility = View.GONE
 
+        //Task Name
+        binding.edtTaskName.isEnabled = true
+
         //description
         binding.edtTaskDescription.visibility = View.VISIBLE
         binding.edtTaskDescription.isEnabled = true
@@ -304,6 +315,8 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
         binding.imgEdit.visibility = View.VISIBLE
         binding.btnTaskComplete.visibility = View.VISIBLE
+
+        binding.edtTaskName.isEnabled = false
 
         binding.edtTaskDescription.isEnabled = false
         binding.edtTaskName.isEnabled = false

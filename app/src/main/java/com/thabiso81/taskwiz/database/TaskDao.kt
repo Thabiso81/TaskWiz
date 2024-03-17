@@ -34,7 +34,7 @@ interface TaskDao {
     fun getCheckListById(taskId: Long): LiveData<List<TaskChecklistModel>>
 
 
-    @Query("SELECT * FROM userTasks where completionStatus = 'Incomplete'")
+    @Query("SELECT * FROM userTasks where completionStatus = 'Incomplete' ORDER BY taskDueDate DESC")
     fun getAllIncompleteTasksWithChecklists(): LiveData<List<TaskWithChecklist>>
 
 }

@@ -14,7 +14,8 @@
     <color name="button_color3">#DA4637</color>
     <color name="delete_color">#DAE81616</color>
     <color name="delete_color2">#DAF62727</color>
-    <color name="delete_color3">#2D2F31</color>
+    <color name="overdue_color">#DAFD4C4C</color>
+    <color name="overdue_color_trans">#31FD4C4C</color>
     <color name="task_checkbox_color">#42C824</color>
     <color name="rv_bg">#3c3f46</color>
     <color name="hint_color">#B2B3B3B3</color>
