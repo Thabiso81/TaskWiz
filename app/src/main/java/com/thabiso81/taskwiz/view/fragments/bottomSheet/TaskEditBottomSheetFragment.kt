@@ -80,17 +80,13 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
         deleteDueDateOnClick()
 
+        addChecklistOnclick()
+
         edtCompletionDate_OnClickListener()
 
         return view
     }
 
-    private fun deleteDueDateOnClick() {
-        binding.imgDeleteDueDate.setOnClickListener {
-            binding.edtCompletionDate.setText("")
-            taskCompletionDate = null
-        }
-    }
 
 
     private fun populateUI() {
@@ -190,6 +186,17 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
 
             populateUI()
         }
+    }
+
+    private fun deleteDueDateOnClick() {
+        binding.imgDeleteDueDate.setOnClickListener {
+            binding.edtCompletionDate.setText("")
+            taskCompletionDate = null
+        }
+    }
+
+    private fun addChecklistOnclick() {
+
     }
 
     private fun edtCompletionDate_OnClickListener() {
@@ -311,10 +318,13 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
         binding.btnDone.visibility = View.GONE
         binding.imgAddMoreChecklistItems.visibility = View.GONE
         binding.imgDeleteDueDate.visibility = View.GONE
-
+        //for the checklist
+        binding.lytReviewChecklist.visibility = View.GONE
 
         binding.imgEdit.visibility = View.VISIBLE
         binding.btnTaskComplete.visibility = View.VISIBLE
+        //for the checklist
+        binding.lytDisplayChecklist.visibility = View.VISIBLE
 
         binding.edtTaskName.isEnabled = false
 

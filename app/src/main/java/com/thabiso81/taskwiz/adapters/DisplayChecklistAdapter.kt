@@ -9,7 +9,7 @@ import com.thabiso81.taskwiz.databinding.ChecklistViewHolderBinding
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 
 class DisplayChecklistAdapter: RecyclerView.Adapter<DisplayChecklistAdapter.TaskChecklistAdapterViewHolder>() {
-
+        //this recyclerview is used only to display checklists.
     inner class TaskChecklistAdapterViewHolder(val itemBinding: ChecklistViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
     private val diffUtil = object : DiffUtil.ItemCallback<TaskChecklistModel>(){

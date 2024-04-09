@@ -10,6 +10,7 @@
     android:background="@color/edit_text_color"
     tools:context=".view.fragments.bottomSheet.TaskEditBottomSheetFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -374,12 +375,32 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/lytDisplayChecklist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/lytChecklistHeader">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvChecklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:clipToPadding="true"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/checklist_view_holder" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/lytReviewChecklist"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/lytChecklistHeader">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvReviewChecklist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
