@@ -1,10 +1,7 @@
 package com.thabiso81.taskwiz.view.fragments
 
-import android.R
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,19 +13,19 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.thabiso81.taskwiz.adapters.TaskListAdapter
-import com.thabiso81.taskwiz.database.TaskDatabase
+import com.thabiso81.taskwiz.adapters.DisplayTaskListAdapter
 import com.thabiso81.taskwiz.databinding.FragmentViewCurrentTasksBinding
+import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
 import com.thabiso81.taskwiz.view.activities.MainActivity
+import com.thabiso81.taskwiz.view.fragments.bottomSheet.OnTaskSaved
 import com.thabiso81.taskwiz.view.fragments.bottomSheet.TaskEditBottomSheetFragment
 import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModel
-import com.thabiso81.taskwiz.viewModel.viewTasksViewModel.ViewTasksViewModelFactory
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,13 +35,17 @@ import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
 
-class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickListener, TaskListAdapter.OnTaskClickListener {
+class ViewCurrentTasksFragment : Fragment(), DisplayTaskListAdapter.OnCheckboxClickListener, DisplayTaskListAdapter.OnTaskClickListener, OnTaskSaved {
     private var _binding: FragmentViewCurrentTasksBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var  viewModel: ViewTasksViewModel
 
-    private lateinit var taskListAdapter: TaskListAdapter
+    private lateinit var displayTaskListAdapter: DisplayTaskListAdapter
+
+    private var numTasks = 0
+    private var newNumTasks = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -58,11 +59,13 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         _binding = FragmentViewCurrentTasksBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        setupUi()
+
+
         instantiateDatabaseAndViewModel()
 
         //get the list of tasks
         viewModel.getIncompleteTasks()
+
         observerTasks()
 
         prepareReyclerView()
@@ -71,18 +74,14 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         onTaskSwipe()
 
-        countCompleteTasks()
-
-        onTasksComplete()
-
         onBackButtonPressed()
 
         return view
     }
 
-    private fun setupUi() {
+    private fun SetupUi() {
         binding.lytNoTasks.visibility = View.GONE
-        //setUpUI_Invisibile()
+
     }
 
 
@@ -90,10 +89,10 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
         viewModel = (activity as MainActivity).viewModel
     }
 
-    private fun prepareReyclerView() {
-        taskListAdapter = TaskListAdapter(this, this)
+    fun prepareReyclerView() {
+        displayTaskListAdapter = DisplayTaskListAdapter(this, this)
         binding.rvTasks.apply {
-            adapter = taskListAdapter
+            adapter = displayTaskListAdapter
 
         }
 
@@ -105,12 +104,41 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         viewModel.observeIncompleteTasksLiveData().observe(viewLifecycleOwner, Observer { tasks ->
 
-            if (tasks.isNullOrEmpty()){
-                onNoTasksAvailable()
-            }else{
+
+            if (!tasks.isNullOrEmpty()){
+                val submitNewList = false
+                //if number of tasks has changed, then
+                //prepareReyclerView() and displayTaskListAdapter.differ.submitList(tasks.toMutableList())
+                //else only displayTaskListAdapter.differ.submitList(tasks.toMutableList())
+                newNumTasks = tasks.size
+                if(numTasks == newNumTasks){
+                    prepareReyclerView()
+
+                }else{
+                    numTasks = newNumTasks
+                }
+
+
                 onTasksAvailable()
 
-                taskListAdapter.differ.submitList(tasks.toMutableList())
+                //display (number of incompleteTasks and total number of Tasks)
+                val totalTasks = tasks.size
+                var completeTasks = 0
+
+                for(task in tasks){
+                    if(task.task.completionStatus.equals("complete"))
+                        completeTasks++
+                }
+
+                binding.edtRemainingTasks.text = "$completeTasks/$totalTasks complete"
+
+                displayTaskListAdapter.differ.submitList(tasks.toMutableList())
+
+            }else{
+                onNoTasksAvailable()
+                prepareReyclerView()
+                displayTaskListAdapter.differ.submitList(tasks.toMutableList())
+                binding.edtRemainingTasks.text = "All done"
             }
         })
 
@@ -130,9 +158,9 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
             ) = true //use this if you want something to happen when we scroll in recyclerview
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition //get the position of viewHolder item being swiped
-                val task = taskListAdapter.differ.currentList[position].task
-                viewModel.deleteTask(taskListAdapter.differ.currentList[position].task)
+                val position = viewHolder.bindingAdapterPosition //get the position of viewHolder item being swiped
+                val task = displayTaskListAdapter.differ.currentList[position].task
+                viewModel.deleteTask(displayTaskListAdapter.differ.currentList[position].task)
 
                 Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG).setAction(
                     "undo",
@@ -146,7 +174,7 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                                 viewModel.insertTask(task)
                             }
 
-                            if (position == 0) taskListAdapter.notifyDataSetChanged()
+                            if (position == 0) displayTaskListAdapter.notifyDataSetChanged()
 
                     }
                 ).show()
@@ -192,10 +220,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
         }
 
-
-
-
-
         //attach the itemTouchHelper to our recyclerview
         ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.rvTasks)
     }
@@ -206,15 +230,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
             toFloat(), resources.displayMetrics
         ).roundToInt()
 
-    private fun countCompleteTasks() {
-        //viewModel.obser
-    }
-
-
-
-    private fun onTasksComplete() {
-
-    }
 
     private fun onNoTasksAvailable() {
 
@@ -232,9 +247,9 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
 
 
     private fun onTasksAvailable() {
+        binding.lytNoTasks.visibility = View.GONE
         binding.rvTasks.visibility = View.VISIBLE
         binding.lottiAnimation.pauseAnimation()
-        binding.lytNoTasks.visibility = View.GONE
     }
     private fun onBackButtonPressed(){
         //handle back button being pressed
@@ -245,12 +260,8 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                 // handle back press in fragments.
                 backButtonPressed++
                 if (backButtonPressed >= 2){
-                    /*val intent  = Intent(requireContext(), LoginActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)*/
 
                     exitProcess(1)
-
 
                 }else if(backButtonPressed < 2){
                     Toast.makeText(requireContext(), "press back again to exit", Toast.LENGTH_SHORT).show()
@@ -297,8 +308,6 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
                     viewModel.insertTask(task)
                 }
 
-                countCompleteTasks()
-
             }
         ).show()
 
@@ -309,14 +318,35 @@ class ViewCurrentTasksFragment : Fragment(), TaskListAdapter.OnCheckboxClickList
     }
 
     //callback for when task is clicked on recyclerview
-    override fun onTaskClick(task: TaskModel) {
+    override fun onTaskClick(task: TaskModel, checklist: List<TaskChecklistModel>) {
         //instantiate bottom sheet Fragment and pass the taskId as an argument
-        val taskEditBottomSheetFragment = TaskEditBottomSheetFragment.newInstance(
-            task.taskId.toString(),
-            task.taskName.toString(),
-            task.taskDescription.toString(),
-            task.taskDueDate.toString())
-        taskEditBottomSheetFragment.show(childFragmentManager, "Task Details")
+
+        val action = ViewCurrentTasksFragmentDirections.actionViewCurrentTasksFragmentToTaskEditBottomSheetFragment(task, checklist.toTypedArray())
+
+        val navController = findNavController()
+
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .build()
+
+        val destFragment = TaskEditBottomSheetFragment()
+        destFragment.setOnTaskSavedListener(this)
+        destFragment.setTargetFragment(this, 0)
+
+        navController.navigate(action, navOptions)
+
+        /*findNavController().navigate(ViewCurrentTasksFragmentDirections.
+        actionViewCurrentTasksFragmentToTaskEditBottomSheetFragment(
+            task,
+            checklist.toTypedArray()))*/
     }
+
+    override fun onTaskSaved(isSaved: Boolean) {
+
+            prepareReyclerView()
+            observerTasks()
+
+    }
+
 
 }

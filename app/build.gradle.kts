@@ -3,6 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
+
+    //Safe args for navivation of data between fragments
+    id("androidx.navigation.safeargs.kotlin")
+
+    //Parcelize for auto generation of Parcelable
+    id("kotlin-parcelize")
 }
 
 android {
@@ -67,7 +73,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     //Navigation components
-    val nav_version = "2.7.5"
+    val nav_version = "2.7.6"
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
@@ -76,5 +82,8 @@ dependencies {
 
     //Recyclerview onswipe gestures
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
+    //cirle image view
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
 }

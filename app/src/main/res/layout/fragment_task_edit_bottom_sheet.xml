@@ -1,208 +1,453 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="500dp"
     android:layout_gravity="bottom"
+    android:minHeight="120dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:backgroundTint="@color/create_task_root_view_background"
     android:background="@color/edit_text_color"
     tools:context=".view.fragments.bottomSheet.TaskEditBottomSheetFragment">
 
-    <!--<TextView
-        android:id="@+id/txtHeading"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="28dp"
-        android:width="120dp"
-        android:fontFamily="@font/poppins_medium"
-        android:height="40dp"
-        android:gravity="bottom|center"
-        android:text="@string/create_task_lable"
-        android:textColor="@color/bright_white"
-        android:textSize="19sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parnt"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/lytDivider"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/edit_text_color"
-        android:layout_marginBottom="40dp"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtHeading"
-        android:orientation="horizontal" />-->
+        <LinearLayout
+            android:id="@+id/lytDivider"
+            android:layout_width="35dp"
+            android:layout_height="9dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/edit_text_color"
+            android:background="@drawable/view_background_edit_text_date"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="horizontal" />
 
-    <LinearLayout
-        android:id="@+id/lytDivider"
-        android:layout_width="35dp"
-        android:layout_height="9dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/edit_text_color"
-        android:background="@drawable/view_background_edit_text_date"
-        android:layout_marginBottom="40dp"
-        android:layout_marginHorizontal="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal" />
-
-    <LinearLayout
-        android:id="@+id/lyt_task_details"
+        <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:backgroundTint="@color/create_task_root_view_background"
-        android:background="@drawable/view_background_edit_text_date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lytDivider">
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="25dp"
+        android:gravity="end"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edtTaskName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:minHeight="50dp"
-            android:layout_margin="5dp"
-            android:fontFamily="@font/poppins_medium"
-            android:padding="10dp"
-            android:background="@android:color/transparent"
-            android:hint="@string/task_name_hint"
-            android:textAlignment="textStart"
-            android:textColor="@color/bright_white"
-            android:textColorHint="@color/hint_color"
-            android:textSize="15dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="3dp"
-            android:background="@color/edit_text_color"/>
-
-        <EditText
-            android:id="@+id/edtTaskDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:inputType="textMultiLine"
-            android:gravity="top|left"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/poppins_medium"
-            android:padding="10dp"
-            android:hint="Notes..."
-            android:textColor="@color/bright_white"
-            android:textColorHint="@color/hint_color"
-            android:textSize="13dp"/>
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cdvCompletionDate"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:cardElevation="0dp"
-        app:cardCornerRadius="30dp"
-        app:cardBackgroundColor="#373839"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lyt_task_details"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingVertical="2dp"
-            android:paddingHorizontal="5dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgEnableDueDate"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
-                android:src="@drawable/ic_alarm"/>
-
-            <LinearLayout
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="5dp"
-                android:layout_marginHorizontal="5dp"
-                android:background="@color/edit_text_color"/>
-
-            <TextView
-                android:id="@+id/edtCompletionDate"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/imgEdit"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingHorizontal="5dp"
-                android:gravity="left|center_vertical"
-                android:focusableInTouchMode="false"
-                android:ems="10"
-                android:hint="@string/complete_by_hint"
-                android:fontFamily="@font/poppins_medium"
-                android:textColor="@color/bright_white"
-                android:textColorHint="@color/hint_color"
-                android:textSize="12dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                app:cardBackgroundColor="@color/recycler_view_grey"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/ic_edit"/>
+            </androidx.cardview.widget.CardView>
+
+
+     <androidx.cardview.widget.CardView
+                android:id="@+id/btnDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/recycler_view_grey"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+         android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_done"
+                        app:tint="@color/button_color"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:layout_marginHorizontal="5dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@android:color/transparent"
+                        android:text="Done"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/button_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnTaskComplete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginStart="10dp"
+                app:cardBackgroundColor="@color/recycler_view_grey"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_done"
+                        app:tint="@color/button_color"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@android:color/transparent"
+                        android:text="mark as done"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/button_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/txtChecklistTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:minHeight="50dp"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/poppins_medium"
-        android:padding="10dp"
-        android:background="@android:color/transparent"
-        android:text="Checklist"
-        android:textAlignment="textStart"
-        android:textColor="@color/bright_white"
-        android:textColorHint="@color/hint_color"
-        android:textSize="18dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cdvCompletionDate"/>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnCancelEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:layout_marginStart="10dp"
+                app:cardBackgroundColor="@color/recycler_view_grey"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/lytDivider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="3dp"
-        android:background="@color/edit_text_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtChecklistTitle"
-        android:orientation="vertical" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
 
-    <!--<androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTasks"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layoutAnimation="@anim/recyclerview_animation"
-        android:scrollbars="vertical"
-        android:layout_marginHorizontal="10dp"
-        android:nestedScrollingEnabled="false"
-        android:textAlignment="gravity"
-        app:backgroundTint="@null"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/checklist_view_holder"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="paent"
-        app:layout_constraintTop_toBottomOf="@id/lytDivider2"
-        app:layout_constraintBottom_toBottomOf="parent"/>-->
+                        android:fontFamily="@font/poppins_medium"
+                        android:background="@android:color/transparent"
+                        android:text="Cancel"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/button_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/lyt_task_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="35dp"
+            android:padding="5dp"
+            android:backgroundTint="#373839"
+            android:background="@drawable/view_background_edit_text_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgEdit">
+
+            <EditText
+                android:id="@+id/edtTaskName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:enabled="false"
+                android:layout_marginHorizontal="5dp"
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/task_name_hint"
+                android:textAlignment="textStart"
+                android:textColor="@color/bright_white"
+                android:textColorHint="@color/hint_color"
+                android:textSize="17dp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="3dp"
+                android:layout_marginVertical="1dp"
+                app:dividerColor="@color/edit_text_color"
+                />
+
+            <EditText
+                android:id="@+id/edtTaskDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
+                android:layout_marginHorizontal="5dp"
+                android:inputType="textMultiLine"
+                android:enabled="false"
+                android:gravity="top|left"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/poppins_medium"
+                android:paddingHorizontal="10dp"
+                android:hint="Notes..."
+                android:textColor="@color/hint_color"
+                android:textColorHint="@color/hint_color"
+                android:textSize="13dp"/>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="8dp"
+
+            android:orientation="horizontal"
+            android:gravity="center|left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lyt_task_details">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cdvCompletionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="30dp"
+                app:cardBackgroundColor="#373839"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingVertical="2dp"
+                    android:paddingHorizontal="5dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imgEnableDueDate"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/ic_alarm"/>
+
+                    <LinearLayout
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="5dp"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/edit_text_color"/>
+
+                    <TextView
+                        android:id="@+id/edtCompletionDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:clickable="false"
+                        android:enabled="false"
+                        android:paddingHorizontal="5dp"
+                        android:gravity="left|center_vertical"
+                        android:focusableInTouchMode="false"
+                        android:ems="10"
+                        android:hint="@string/complete_by_hint"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textColor="@color/bright_white"
+                        android:textColorHint="@color/hint_color"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <ImageView
+                android:id="@+id/imgDeleteDueDate"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:visibility="gone"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_delete2"
+                app:tint="@color/button_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tvAddChecklist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:backgroundTint="@color/recycler_view_grey"
+            android:background="@drawable/view_background_edit_text_date"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/poppins_medium"
+            android:drawableLeft="@drawable/ic_add_checklist"
+            android:drawableTint="@color/button_color"
+            android:drawablePadding="15dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="3dp"
+            android:text="Add Checklist"
+            android:textColor="@color/button_color"
+            android:textSize="16sp"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lytChecklistHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="5dp"
+            app:layout_constraintTop_toBottomOf="@id/cdvCompletionDate">
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/poppins_medium"
+                android:background="@android:color/transparent"
+                android:text="Checklist"
+                android:textAlignment="textStart"
+                android:textColor="@color/bright_white"
+                android:textSize="15sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageView
+                android:id="@+id/imgAddMoreChecklistItems"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_add2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/edit_text_color"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader"
+                app:layout_constraintEnd_toEndOf="@id/imgAddMoreChecklistItems"
+                app:layout_constraintStart_toStartOf="@id/tvHeader"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/lytDisplayChecklist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/lytChecklistHeader">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvChecklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:clipToPadding="true"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/checklist_view_holder" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/lytReviewChecklist"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/lytChecklistHeader">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvReviewChecklist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:clipToPadding="true"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/checklist_view_holder" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/lytChecklist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="3dp"
+            android:layout_marginHorizontal="2dp"
+            android:layout_gravity="bottom"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <EditText
+                android:id="@+id/edtChecklistItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minHeight="20dp"
+                android:layout_margin="5dp"
+                android:imeOptions="actionDone"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/poppins_medium"
+                android:padding="10dp"
+                android:background="@android:color/transparent"
+                android:hint="Add checklist item..."
+                android:textAlignment="textStart"
+                android:textColor="@color/bright_white"
+                android:textColorHint="@color/hint_color"
+                android:textSize="15dp" />
+            <ImageView
+                android:id="@+id/imgEnterChecklist"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_enter"
+                android:layout_gravity="right|center_vertical"/>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -16,11 +16,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.thabiso81.taskwiz.R
-import com.thabiso81.taskwiz.adapters.TaskChecklistAdapter
+import com.thabiso81.taskwiz.adapters.ReviewChecklistAdapter
 import com.thabiso81.taskwiz.database.TaskDatabase
 import com.thabiso81.taskwiz.databinding.FragmentCreateTaskBinding
 import com.thabiso81.taskwiz.model.TaskChecklistModel
 import com.thabiso81.taskwiz.model.TaskModel
+import com.thabiso81.taskwiz.view.fragments.bottomSheet.OnTaskSaved
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModel
 import com.thabiso81.taskwiz.viewModel.createTaskViewModel.CreateTaskViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -29,17 +30,17 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 
-class CreateTaskFragment : Fragment() {
+class CreateTaskFragment : Fragment(), OnTaskSaved {
     private var _binding: FragmentCreateTaskBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var checkListAdapter: TaskChecklistAdapter
+    private lateinit var checkListAdapter: ReviewChecklistAdapter
     private var checklistItems = mutableListOf<String>()
 
     private lateinit var taskMvvm: CreateTaskViewModel
     private val defaultCompletionStatus = "Incomplete"
 
-    private var taskCompletionDate: LocalDate? = null
+    private var taskCompletionDate: Long? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -81,7 +82,7 @@ class CreateTaskFragment : Fragment() {
     }
 
     private fun prepare_RecyclerView() {
-        checkListAdapter = TaskChecklistAdapter()
+        checkListAdapter = ReviewChecklistAdapter()
         binding.rvChecklist.apply {
             setHasFixedSize(false)
             adapter = checkListAdapter
@@ -122,14 +123,14 @@ class CreateTaskFragment : Fragment() {
             datePicker.addOnPositiveButtonClickListener {
 
                 //convert unix epoch value from milliseconds to days
-                taskCompletionDate = LocalDate.ofEpochDay(it / (24 * 60 * 60 * 1000))
+                taskCompletionDate = it / (24 * 60 * 60 * 1000)
                 binding.edtCompletionDate.setText(
-                    "${taskCompletionDate!!.dayOfMonth} " +
-                            "${taskCompletionDate!!.month} " +
-                            "${if (LocalDate.now().year == taskCompletionDate!!.year) "" else taskCompletionDate!!.year}"
+                    "${LocalDate.ofEpochDay(taskCompletionDate!!).dayOfMonth} " +
+                            "${LocalDate.ofEpochDay(taskCompletionDate!!).month} " +
+                            "${if (LocalDate.now().year == LocalDate.ofEpochDay(taskCompletionDate!!).year) "" else LocalDate.ofEpochDay(taskCompletionDate!!).year}"
                 )
 
-                if (taskCompletionDate!!.isBefore(LocalDate.now())){
+                if (LocalDate.ofEpochDay(taskCompletionDate!!).isBefore(LocalDate.now())){
                     binding.edtCompletionDate.text=""
                     Toast.makeText(requireContext(), "Please select a future date", Toast.LENGTH_LONG).show()
                 }
@@ -171,31 +172,30 @@ class CreateTaskFragment : Fragment() {
 
     private fun saveTask(){
 
-        if (inputValid(binding.edtTaskName, binding.edtCompletionDate)) {
+        if (inputValid(binding.edtTaskName, binding.edtTaskDescription)) {
             val newTask = TaskModel(
                 taskDescription = binding.edtTaskDescription.text.toString(),
                 taskName = binding.edtTaskName.text.toString(),
                 taskDueDate = taskCompletionDate,
                 completionStatus = defaultCompletionStatus,
-                taskCreationDate = LocalDate.now(),
+                taskCreationDate = LocalDate.now().toEpochDay(),
             )
 
 
-            CoroutineScope(Dispatchers.IO).launch{
+            CoroutineScope(Dispatchers.Main).launch{
                 val taskId = taskMvvm.insertTask(newTask)
 
                 if (!checklistItems.isNullOrEmpty()){
                     for(checklist in checklistItems){
 
-                        val newChecklist = TaskChecklistModel(checklistItemTitle = checklist ,taskId=taskId )
+                        val newChecklist = TaskChecklistModel(checklistItemTitle = checklist ,taskId=taskId, completionStatus = defaultCompletionStatus)
 
                         taskMvvm.insertChecklist(newChecklist)
                     }
                 }
+
+                findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
             }
-
-
-            findNavController().navigate(R.id.action_createTaskFragment_to_viewCurrentTasksFragment)
         }
 
     }
@@ -235,13 +235,17 @@ class CreateTaskFragment : Fragment() {
         })
     }
 
-    fun inputValid(taskName: EditText, taskDueDate: TextView): Boolean{
+    fun inputValid(taskName: EditText, taskDescription: EditText): Boolean{
         var isValid = true
-        if (taskName.text.toString().isEmpty()){
+        if (taskName.text.toString().isEmpty() && taskDescription.text.toString().isEmpty() ){
             isValid = false
-            Toast.makeText(requireContext(), "Enter a task title", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Oops! forgot to fill in the task title or task description.", Toast.LENGTH_LONG).show()
         }
         return isValid
+    }
+
+    override fun onTaskSaved(isSaved: Boolean) {
+        val taskSaved = isSaved
     }
 
 }

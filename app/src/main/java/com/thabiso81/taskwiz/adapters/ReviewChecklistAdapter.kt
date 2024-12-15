@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.thabiso81.taskwiz.databinding.ChecklistViewHolderBinding
-import com.thabiso81.taskwiz.databinding.TaskViewHolderBinding
-import com.thabiso81.taskwiz.model.TaskChecklistModel
-import com.thabiso81.taskwiz.model.TaskModel
 
-class TaskChecklistAdapter: RecyclerView.Adapter<TaskChecklistAdapter.TaskChecklistAdapterViewHolder>() {
-
+class ReviewChecklistAdapter: RecyclerView.Adapter<ReviewChecklistAdapter.TaskChecklistAdapterViewHolder>() {
+        //This recyclerview is used to add checklists to items while user is editing a task.
     inner class TaskChecklistAdapterViewHolder(val itemBinding: ChecklistViewHolderBinding): RecyclerView.ViewHolder(itemBinding.root)
 
     private val diffUtil = object : DiffUtil.ItemCallback<String>(){

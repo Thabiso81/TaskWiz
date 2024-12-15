@@ -17,6 +17,9 @@
             app:exitAnim="@null"
             app:popEnterAnim="@anim/fragment_slide_up"
             app:popExitAnim="@anim/fragment_slide_down"/>
+        <action
+            android:id="@+id/action_viewCurrentTasksFragment_to_taskEditBottomSheetFragment"
+            app:destination="@id/taskEditBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/createTaskFragment"
@@ -28,4 +31,21 @@
             app:destination="@id/viewCurrentTasksFragment"/>
 
     </fragment>
+    <dialog
+        android:id="@+id/taskEditBottomSheetFragment"
+        android:name="com.thabiso81.taskwiz.view.fragments.bottomSheet.TaskEditBottomSheetFragment"
+        android:label="fragment_task_edit_bottom_sheet"
+        tools:layout="@layout/fragment_task_edit_bottom_sheet" >
+        <action
+            android:id="@+id/action_taskEditBottomSheetFragment_to_viewCurrentTasksFragment"
+            app:destination="@id/viewCurrentTasksFragment" />
+        <argument
+            android:name="task"
+            app:argType="com.thabiso81.taskwiz.model.TaskModel" />
+        <argument
+            android:name="checklist"
+            app:argType="com.thabiso81.taskwiz.model.TaskChecklistModel[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </dialog>
 </navigation>

@@ -87,20 +87,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lytDivider">
 
-        <LinearLayout
-            android:id="@+id/taskLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/layout_backgound_root_view"
-            android:orientation="vertical"
-            app:backgroundTint="@null">
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTasks"
+                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layoutAnimation="@anim/recyclerview_animation"
@@ -108,10 +97,11 @@
                 android:textAlignment="gravity"
                 app:backgroundTint="@null"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/task_view_holder" />
-
-        </LinearLayout>
-
+                tools:listitem="@layout/task_view_holder"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"/>
 
         <ImageView
             android:id="@+id/bvAddTask"
@@ -128,8 +118,13 @@
             android:id="@+id/lytNoTasks"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottiAnimation"
