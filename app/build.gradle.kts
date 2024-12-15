@@ -9,6 +9,7 @@ plugins {
 
     //Parcelize for auto generation of Parcelable
     id("kotlin-parcelize")
+
 }
 
 android {
