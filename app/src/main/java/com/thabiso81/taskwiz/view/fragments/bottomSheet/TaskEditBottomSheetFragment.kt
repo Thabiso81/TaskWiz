@@ -239,7 +239,7 @@ class TaskEditBottomSheetFragment : BottomSheetDialogFragment() {
                 taskId = task.taskId,
                 taskDescription = binding.edtTaskDescription.text.toString(),
                 taskName = binding.edtTaskName.text.toString(),
-                taskDueDate = taskCompletionDate, //?: task.taskDueDate,
+                taskDueDate = taskCompletionDate ?: task.taskDueDate,
                 completionStatus = defaultCompletionStatus,
                 taskCreationDate = LocalDate.now().toEpochDay(),
             )
